@@ -25,6 +25,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 import {
   loginSchema,
@@ -205,9 +206,8 @@ export function LoginForm({ loginMode }: { loginMode: LoginMode }) {
                       icon={LockSync01Icon}
                       className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
                     />
-                    <Input
+                    <PasswordInput
                       id="password"
-                      type="password"
                       {...field}
                       placeholder="Enter your password"
                       autoComplete="current-password"

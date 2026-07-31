@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
 	Select,
 	SelectContent,
@@ -1669,23 +1670,40 @@ function ControlledInputField({
 				control={control}
 				render={({ field, fieldState }) => (
 					<>
-						<Input
-							id={id}
-							type={type}
-							name={field.name}
-							ref={field.ref}
-							value={formatInputValue(field.value)}
-							onBlur={field.onBlur}
-							onChange={event =>
-								field.onChange(
-									valueAsNumber
-										? parseNumberInput(event.currentTarget.value, event.currentTarget.valueAsNumber)
-										: event.currentTarget.value
-								)
-							}
-							placeholder={placeholder}
-							disabled={disabled}
-						/>
+						{type === "password" ? (
+							<PasswordInput
+								id={id}
+								name={field.name}
+								ref={field.ref}
+								value={formatInputValue(field.value)}
+								onBlur={field.onBlur}
+								onChange={event =>
+									field.onChange(
+										valueAsNumber
+											? parseNumberInput(event.currentTarget.value, event.currentTarget.valueAsNumber)
+											: event.currentTarget.value
+									)
+								}
+								placeholder={placeholder}
+								disabled={disabled}
+							/>
+						) : (
+							<Input
+								id={id}
+								type={type}
+								name={field.name}
+								ref={field.ref}
+								value={formatInputValue(field.value)}
+								onBlur={field.onBlur}
+								onChange={event =>
+									field.onChange(
+										valueAsNumber ? event.target.valueAsNumber : event.target.value
+									)
+								}
+								placeholder={placeholder}
+								disabled={disabled}
+							/>
+						)}
 						<FieldError>{fieldState.error?.message}</FieldError>
 					</>
 				)}

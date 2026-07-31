@@ -28,6 +28,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useAuth } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api/errors";
 
@@ -140,10 +141,9 @@ function ChangePasswordForm({ user }: { user: AuthUser }) {
               >
                 Current Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="current-password"
                 {...field}
-                type="password"
                 autoComplete="current-password"
                 disabled={isSaving}
                 aria-invalid={fieldState.invalid}
@@ -165,10 +165,9 @@ function ChangePasswordForm({ user }: { user: AuthUser }) {
               >
                 New Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="new-password"
                 {...field}
-                type="password"
                 autoComplete="new-password"
                 disabled={isSaving}
                 aria-invalid={fieldState.invalid}
@@ -194,10 +193,9 @@ function ChangePasswordForm({ user }: { user: AuthUser }) {
               >
                 Confirm Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="confirm-password"
                 {...field}
-                type="password"
                 autoComplete="new-password"
                 disabled={isSaving}
                 aria-invalid={fieldState.invalid}
@@ -296,10 +294,9 @@ function SetPasswordForm({ user }: { user: AuthUser }) {
               >
                 New Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="set-new-password"
                 {...field}
-                type="password"
                 autoComplete="new-password"
                 disabled={isSaving}
                 aria-invalid={fieldState.invalid}
@@ -325,10 +322,9 @@ function SetPasswordForm({ user }: { user: AuthUser }) {
               >
                 Confirm Password
               </FieldLabel>
-              <Input
+              <PasswordInput
                 id="set-confirm-password"
                 {...field}
-                type="password"
                 autoComplete="new-password"
                 disabled={isSaving}
                 aria-invalid={fieldState.invalid}

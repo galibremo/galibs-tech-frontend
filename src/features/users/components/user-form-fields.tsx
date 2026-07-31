@@ -4,6 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
 	Select,
 	SelectContent,
@@ -106,9 +107,8 @@ export function UserFormFields({
 						render={({ field, fieldState }) => (
 							<Field>
 								<FieldLabel htmlFor={`${idPrefix}-password`}>Password</FieldLabel>
-								<Input
+								<PasswordInput
 									id={`${idPrefix}-password`}
-									type="password"
 									{...field}
 									placeholder="Optional"
 									disabled={disabled}

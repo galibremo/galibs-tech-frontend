@@ -19,6 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 import {
   registerSchema,
@@ -124,9 +125,8 @@ export function RegisterForm() {
                   icon={LockSync01Icon}
                   className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
                 />
-                <Input
+                <PasswordInput
                   id="register-password"
-                  type="password"
                   {...field}
                   placeholder="Enter your password"
                   autoComplete="new-password"
