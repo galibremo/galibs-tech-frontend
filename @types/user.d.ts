@@ -22,7 +22,7 @@ interface User {
   emailVerified: boolean;
   image: string | null;
   phone: string | null;
-  role: "ADMIN" | "MANAGER" | "USER" | "SUPER_ADMIN";
+  role: "ADMIN" | "MANAGER" | "CUSTOMER" | "SUPER_ADMIN";
   createdAt: string;
   updatedAt: string;
 }

@@ -28,7 +28,8 @@ interface UsersDataTableToolbarProps<TData> {
 
 const userRoleFilterOptions = [
   { label: "Super Admin", value: "SUPER_ADMIN" },
-  { label: "User", value: "USER" },
+  { label: "Admin", value: "ADMIN" },
+  { label: "Customer", value: "CUSTOMER" },
 ];
 
 export function UsersDataTableToolbar<TData>({

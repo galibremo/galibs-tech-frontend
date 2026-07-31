@@ -28,13 +28,13 @@ export function canManageUser(currentUser: AuthUser | null | undefined, target: 
 
 export function getAssignableRoles(currentUser: AuthUser | null | undefined): UserRole[] {
 	if (!currentUser) return [];
-	if (currentUser.role === "SUPER_ADMIN") return ["SUPER_ADMIN", "USER"];
+	if (currentUser.role === "SUPER_ADMIN") return ["SUPER_ADMIN", "ADMIN", "CUSTOMER"];
 	return [];
 }
 
 export function getDefaultAssignableRole(currentUser: AuthUser | null | undefined): UserRole {
 	const assignableRoles = getAssignableRoles(currentUser);
-	return assignableRoles.includes("USER") ? "USER" : (assignableRoles[0] ?? "USER");
+	return assignableRoles.includes("CUSTOMER") ? "CUSTOMER" : (assignableRoles[0] ?? "CUSTOMER");
 }
 
 export function formatRevokedUserSessionsCount(count: number): string {

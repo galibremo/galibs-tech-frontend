@@ -1,5 +1,5 @@
-export type UserRole = "USER" | "SUPER_ADMIN";
-export const userRoleValues = ["USER", "SUPER_ADMIN"] as const;
+export type UserRole = "CUSTOMER" | "ADMIN" | "SUPER_ADMIN";
+export const userRoleValues = ["CUSTOMER", "ADMIN", "SUPER_ADMIN"] as const;
 export const userSortValues = [
 	"name",
 	"email",
