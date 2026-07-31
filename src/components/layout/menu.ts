@@ -33,7 +33,7 @@ const navPlatformItem: NavItemProps[] = [
     title: "Users",
     url: route.private.users,
     icon: UserGroupIcon,
-    roles: ["ADMIN", "SUPER_ADMIN"],
+    roles: ["SUPER_ADMIN"],
   },
   {
     title: "Sessions",
@@ -47,19 +47,19 @@ const navEmailItem: NavItemProps[] = [
     title: "Email Providers",
     url: route.private.emailProviders,
     icon: Mail01Icon,
-    roles: ["ADMIN", "SUPER_ADMIN"],
+    roles: ["SUPER_ADMIN"],
   },
   {
     title: "Email Logs",
     url: route.private.emailLogs,
     icon: Mail01Icon,
-    roles: ["ADMIN", "SUPER_ADMIN"],
+    roles: ["SUPER_ADMIN"],
   },
   {
     title: "Email Templates",
     url: route.private.emailTemplates,
     icon: MailSettingIcon,
-    roles: ["ADMIN", "SUPER_ADMIN"],
+    roles: ["SUPER_ADMIN"],
   },
 ];
 

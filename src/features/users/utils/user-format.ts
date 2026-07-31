@@ -28,7 +28,7 @@ export function canManageUser(currentUser: AuthUser | null | undefined, target: 
 
 export function getAssignableRoles(currentUser: AuthUser | null | undefined): UserRole[] {
 	if (!currentUser) return [];
-	if (currentUser.role === "SUPER_ADMIN") return ["SUPER_ADMIN", "ADMIN", "CUSTOMER"];
+	if (currentUser.role === "SUPER_ADMIN") return ["SUPER_ADMIN", "AGENT", "CUSTOMER"];
 	return [];
 }
 
