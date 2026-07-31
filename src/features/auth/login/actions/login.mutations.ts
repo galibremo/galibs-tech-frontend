@@ -10,7 +10,7 @@ import {
   requestMagicLink,
   verifyMagicLink,
 } from "./login.actions";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes/routes";
+import { getDefaultLoginRedirect } from "@/routes/routes";
 
 export const useLogin = () => {
   const { setUser } = useAuth();
@@ -22,7 +22,7 @@ export const useLogin = () => {
     onSuccess: (user) => {
       setUser(user);
       const redirectUrl =
-        searchParams.get("redirect") || DEFAULT_LOGIN_REDIRECT;
+        searchParams.get("redirect") || getDefaultLoginRedirect(user.role);
       router.push(redirectUrl);
       router.refresh();
     },
@@ -50,7 +50,7 @@ export const useGoogleLogin = () => {
     onSuccess: (user) => {
       setUser(user);
       const redirectUrl =
-        searchParams.get("redirect") || DEFAULT_LOGIN_REDIRECT;
+        searchParams.get("redirect") || getDefaultLoginRedirect(user.role);
       router.push(redirectUrl);
       router.refresh();
     },
@@ -75,7 +75,7 @@ export const useVerifyMagicLink = () => {
     onSuccess: (user, variables) => {
       setUser(user);
       toast.success("Logged in successfully");
-      router.replace(getMagicLinkRedirectUrl(variables.redirectUrl));
+      router.replace(getMagicLinkRedirectUrl(variables.redirectUrl, user.role));
       router.refresh();
     },
   });

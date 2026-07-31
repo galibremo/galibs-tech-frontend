@@ -1,4 +1,4 @@
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes/routes";
+import { getDefaultLoginRedirect } from "@/routes/routes";
 
 function getFrontendUrl(): URL | null {
   const frontendUrl =
@@ -17,18 +17,18 @@ export function getFrontendOrigin(): string | null {
   return getFrontendUrl()?.origin ?? null;
 }
 
-export function resolveSafeRedirectUrl(redirectUrl: string | null): string {
-  if (!redirectUrl) return DEFAULT_LOGIN_REDIRECT;
+export function resolveSafeRedirectUrl(redirectUrl: string | null, role?: string): string {
+  if (!redirectUrl) return getDefaultLoginRedirect(role);
 
   const frontendUrl = getFrontendUrl();
-  if (!frontendUrl) return DEFAULT_LOGIN_REDIRECT;
+  if (!frontendUrl) return getDefaultLoginRedirect(role);
 
   try {
     const parsed = new URL(redirectUrl, frontendUrl);
-    if (parsed.origin !== frontendUrl.origin) return DEFAULT_LOGIN_REDIRECT;
+    if (parsed.origin !== frontendUrl.origin) return getDefaultLoginRedirect(role);
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
   } catch {
-    return DEFAULT_LOGIN_REDIRECT;
+    return getDefaultLoginRedirect(role);
   }
 }
 

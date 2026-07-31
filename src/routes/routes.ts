@@ -56,7 +56,14 @@ export const apiRoute = {
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;
 
+const getDefaultLoginRedirect = (role?: string) => {
+  if (role === "CUSTOMER") {
+    return route.public.home;
+  }
+  return DEFAULT_LOGIN_REDIRECT;
+};
+
 const appRoutePrefix = process.env.NEXT_PUBLIC_FRONTEND_URL;
 const apiRoutePrefix = process.env.NEXT_PUBLIC_API_URL;
 
-export { apiRoutePrefix, appRoutePrefix, DEFAULT_LOGIN_REDIRECT };
+export { apiRoutePrefix, appRoutePrefix, DEFAULT_LOGIN_REDIRECT, getDefaultLoginRedirect };

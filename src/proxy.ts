@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { route, DEFAULT_LOGIN_REDIRECT } from "@/routes/routes";
+import { route, getDefaultLoginRedirect } from "@/routes/routes";
 
 const PRIVATE_ROUTES = Object.values(route.private).filter(
     (val) => typeof val === "string",
@@ -21,8 +21,8 @@ function matchesAnyRoute(pathname: string, routes: string[]): boolean {
     return routes.some((routePath) => isRouteMatch(pathname, routePath));
 }
 
-async function checkAuth(cookieString: string): Promise<boolean> {
-    if (!cookieString) return false;
+async function checkAuth(cookieString: string): Promise<{ isAuthenticated: boolean; user?: { role?: string } }> {
+    if (!cookieString) return { isAuthenticated: false };
 
     try {
         const res = await fetch(
@@ -32,10 +32,12 @@ async function checkAuth(cookieString: string): Promise<boolean> {
                 cache: "no-store",
             }
         );
-        return res.ok;
+        if (!res.ok) return { isAuthenticated: false };
+        const json = await res.json();
+        return { isAuthenticated: true, user: json.data };
     } catch (error) {
         console.error("Auth proxy fetch error:", error);
-        return false;
+        return { isAuthenticated: false };
     }
 }
 
@@ -72,7 +74,7 @@ export async function proxy(request: NextRequest) {
 
     // Check auth
     const cookieString = request.cookies.toString();
-    const isAuthenticated = await checkAuth(cookieString);
+    const { isAuthenticated, user } = await checkAuth(cookieString);
 
     if (isPrivate && !isAuthenticated) {
         const encodedCallbackUrl = encodeURIComponent(getPublicRequestUrl(request).href);
@@ -83,7 +85,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isProtected && isAuthenticated) {
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, getPublicAppOrigin(request)));
+        return NextResponse.redirect(new URL(getDefaultLoginRedirect(user?.role), getPublicAppOrigin(request)));
     }
 
     return NextResponse.next();

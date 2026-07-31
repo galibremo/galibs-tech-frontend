@@ -67,8 +67,8 @@ export async function verifyMagicLink(
   });
 }
 
-export function getMagicLinkRedirectUrl(redirectUrl: string | null): string {
-  return resolveSafeRedirectUrl(redirectUrl);
+export function getMagicLinkRedirectUrl(redirectUrl: string | null, role?: string): string {
+  return resolveSafeRedirectUrl(redirectUrl, role);
 }
 
 export async function logout(): Promise<void> {
