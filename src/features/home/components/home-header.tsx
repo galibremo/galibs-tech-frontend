@@ -11,8 +11,8 @@ import { Heart, User03Icon } from "@hugeicons/core-free-icons";
 export default function HomeHeader() {
 
   return (
-    <header>
-      <Container className="flex items-center justify-between p-4 gap-3 h-16">
+    <Container>
+      <header className="flex items-center justify-between gap-3 p-4">
         <Logo />
         <GlobalSearch />
         <div className="flex items-center gap-3">
@@ -31,7 +31,7 @@ export default function HomeHeader() {
             LOGIN
           </Button>
         </div>
-      </Container>
-    </header>
+      </header>
+    </Container>
   );
 }
