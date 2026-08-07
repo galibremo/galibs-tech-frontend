@@ -1,6 +1,10 @@
+import HomeHeader from "@/features/home/components/home-header";
 
-export default async function LandingLayout({
-    children,
+export default async function HomeLayout({
+  children,
 }: Readonly<GlobalLayoutProps>) {
-    return <>{children}</>;
+  return <>
+    <HomeHeader />
+    <main>{children}</main>
+  </>;
 }
