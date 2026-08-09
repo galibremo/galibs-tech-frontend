@@ -1,4 +1,4 @@
-import { Cancel, Search } from "@hugeicons/core-free-icons"
+import { Search } from "@hugeicons/core-free-icons"
 import { Input } from "../ui/input"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "../ui/button"
