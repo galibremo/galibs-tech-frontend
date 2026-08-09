@@ -52,62 +52,68 @@ export default function HomeHeader() {
   const { data: categoriesTree } = useCategoriesTreeQuery();
 
   return (
-    <header className="shadow-2xs">
-      <Container>
-        <div className="flex items-center justify-between gap-3 p-4">
-          <Logo />
-          <GlobalSearch />
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              className="hover:bg-transparent cursor-pointer"
-              size="icon"
-            >
-              <HugeiconsIcon icon={Heart} className="mt-0.5" strokeWidth={2} />
-            </Button>
-            <Button variant="ghost" className="text-black hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0">
-              CART <span>($0)</span>
-            </Button>
-            <Button variant="ghost" className="text-black hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0">
-              <HugeiconsIcon icon={User03Icon} className="mt-0.5" strokeWidth={2} />
-              LOGIN
-            </Button>
+    <header>
+      <div className="shadow-2xs">
+        <Container>
+          <div className="flex items-center justify-between gap-3 p-3">
+            <Logo />
+            <GlobalSearch />
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                className="hover:bg-transparent cursor-pointer"
+                size="icon"
+              >
+                <HugeiconsIcon icon={Heart} className="mt-0.5" strokeWidth={2} />
+              </Button>
+              <Button variant="ghost" className="text-black hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0">
+                CART <span>($0)</span>
+              </Button>
+              <Button variant="ghost" className="text-black hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0">
+                <HugeiconsIcon icon={User03Icon} className="mt-0.5" strokeWidth={2} />
+                LOGIN
+              </Button>
+            </div>
           </div>
-        </div>
-        <div className="flex justify-center p-1">
-          <NavigationMenu viewport={false}>
-            <NavigationMenuList>
-              {categoriesTree?.map((category, index) => (
-                <NavigationMenuItem key={category.id}>
-                  {category.children && category.children.length > 0 ? (
-                    <>
-                      <NavigationMenuTrigger>{category.name}</NavigationMenuTrigger>
-                      <NavigationMenuContent
-                        className={categoriesTree && index >= categoriesTree.length / 2 ? "md:right-0 md:left-auto" : ""}
-                      >
-                        <ul className="grid w-60 grid-cols-1">
-                          {category.children.map((child) => (
-                            <ListItem
-                              key={child.id}
-                              title={child.name}
-                              href={`/category/${child.slug}`}
-                              className="p-0"
-                            />
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
-                    </>
-                  ) : (
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()} href={`/category/${category.slug}`}>
-                      {category.name}
-                    </NavigationMenuLink>
-                  )}
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-      </Container>
-    </header>
+        </Container>
+      </div>
+      <div className="shadow-2xs">
+        <Container>
+          <div className="flex justify-center p-2">
+            <NavigationMenu viewport={false}>
+              <NavigationMenuList>
+                {categoriesTree?.map((category, index) => (
+                  <NavigationMenuItem key={category.id}>
+                    {category.children && category.children.length > 0 ? (
+                      <>
+                        <NavigationMenuTrigger className="h-7">{category.name}</NavigationMenuTrigger>
+                        <NavigationMenuContent
+                          className={categoriesTree && index >= categoriesTree.length / 2 ? "md:right-0 md:left-auto" : ""}
+                        >
+                          <ul className="grid w-60 grid-cols-1">
+                            {category.children.map((child) => (
+                              <ListItem
+                                key={child.id}
+                                title={child.name}
+                                href={`/category/${child.slug}`}
+                                className="p-0"
+                              />
+                            ))}
+                          </ul>
+                        </NavigationMenuContent>
+                      </>
+                    ) : (
+                      <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-7")} href={`/category/${category.slug}`}>
+                        {category.name}
+                      </NavigationMenuLink>
+                    )}
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+        </Container>
+      </div>
+    </header >
   );
 }
