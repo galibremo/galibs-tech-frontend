@@ -52,6 +52,8 @@ export const apiRoute = {
   emailLogs: "/email-logs",
   emailLog: (logId: string) => `/email-logs/${logId}`,
   emailLogResend: (logId: string) => `/email-logs/${logId}/resend`,
+  categories: "/categories",
+  categoriesTree: "/categories/tree",
 } as const;
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;
