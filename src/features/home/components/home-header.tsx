@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
+  HTMLAnchorElement,
   React.ComponentPropsWithoutRef<"a">
 >(({ className, title, children, ...props }, ref) => {
   return (
@@ -90,13 +90,13 @@ export default function HomeHeader() {
                         <NavigationMenuContent
                           className={categoriesTree && index >= categoriesTree.length / 2 ? "md:right-0 md:left-auto" : ""}
                         >
-                          <ul className="grid w-60 grid-cols-1">
+                          <ul className="flex flex-col flex-wrap max-h-96 w-max p-1">
                             {category.children.map((child) => (
                               <ListItem
                                 key={child.id}
                                 title={child.name}
                                 href={`/category/${child.slug}`}
-                                className="p-0"
+                                className="p-0 w-38"
                               />
                             ))}
                           </ul>
