@@ -54,6 +54,8 @@ export const apiRoute = {
   emailLogResend: (logId: string) => `/email-logs/${logId}/resend`,
   categories: "/categories",
   categoriesTree: "/categories/tree",
+
+  promotional: "/promotional",
 } as const;
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;
@@ -68,4 +70,9 @@ const getDefaultLoginRedirect = (role?: string) => {
 const appRoutePrefix = process.env.NEXT_PUBLIC_FRONTEND_URL;
 const apiRoutePrefix = process.env.NEXT_PUBLIC_API_URL;
 
-export { apiRoutePrefix, appRoutePrefix, DEFAULT_LOGIN_REDIRECT, getDefaultLoginRedirect };
+export {
+  apiRoutePrefix,
+  appRoutePrefix,
+  DEFAULT_LOGIN_REDIRECT,
+  getDefaultLoginRedirect,
+};

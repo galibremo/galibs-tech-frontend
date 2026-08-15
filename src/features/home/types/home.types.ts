@@ -25,3 +25,24 @@ export interface Category {
 export interface CategoryTreeItem extends Category {
   children: CategoryTreeItem[];
 }
+
+export interface HeroSection {
+  id: string;
+  title: string | null;
+  subTitle: string | null;
+  imageUrl: string;
+  mobileImageUrl: string | null;
+  linkUrl: string | null;
+  linkTarget: string;
+  altText: string | null;
+  sortOrder: number;
+  isActive: boolean;
+  startsAt: string | null;
+  endsAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Promotional {
+  heroSlides: HeroSection[];
+}
