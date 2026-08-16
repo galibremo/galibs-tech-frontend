@@ -5,7 +5,13 @@ import Logo from "@/components/custom-ui/logo";
 import { Container } from "@/components/custom-ui/container";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Heart, Search, ShoppingCart02Icon, User03Icon, Menu01Icon } from "@hugeicons/core-free-icons";
+import {
+  Heart,
+  Search,
+  ShoppingCart02Icon,
+  User03Icon,
+  Menu01Icon,
+} from "@hugeicons/core-free-icons";
 import { useCategoriesTreeQuery } from "@/features/home/actions/home.queries";
 import {
   NavigationMenu,
@@ -32,7 +38,7 @@ import {
 import { cn } from "@/lib/utils";
 import React from "react";
 import Link from "next/link";
-import { useIsMobile } from "@/hooks/use-mobile";
+import ThemeToggle from "@/components/custom-ui/theme-toggle";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
@@ -45,7 +51,7 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-accent-foreground focus:bg-muted focus:text-accent-foreground",
-            className
+            className,
           )}
           {...props}
         >
@@ -68,82 +74,122 @@ export default function HomeHeader() {
     <header>
       <div className="shadow-2xs">
         <Container>
-          <div className="flex items-center justify-between gap-3 p-3">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden shrink-0 cursor-pointer">
-                  <HugeiconsIcon icon={Menu01Icon} className="mt-0.5" strokeWidth={2} />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-75 sm:w-100 gap-0">
-                <SheetHeader>
-                  <SheetTitle className="text-left">Categories</SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col h-full overflow-y-auto">
-                  <Accordion type="multiple" className="w-full">
-                    {categoriesTree?.map((category) => (
-                      category.children && category.children.length > 0 ? (
-                        <AccordionItem key={category.id} value={category.id} className="px-4">
-                          <AccordionTrigger className="text-sm font-medium py-2">
-                            {category.name}
-                          </AccordionTrigger>
-                          <AccordionContent className="[&_a]:no-underline">
-                            <ul className="flex flex-col gap-2 pl-3">
-                              {category.children.map((child) => (
-                                <li key={child.id} className="py-0.5">
-                                  <Link
-                                    href={`/category/${child.slug}`}
-                                    className="text-sm text-muted-foreground no-underline! hover:text-foreground"
-                                  >
-                                    {child.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </AccordionContent>
-                        </AccordionItem>
-                      ) : (
-                        <div key={category.id} className="not-last:border-b flex px-4">
-                          <Link
-                            href={`/category/${category.slug}`}
-                            className="flex flex-1 items-start justify-between py-2 text-left text-sm font-medium"
+          <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
+            <div className="flex lg:hidden items-center gap-1.5 lg:gap-3">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="lg:hidden shrink-0 cursor-pointer"
+                  >
+                    <HugeiconsIcon
+                      icon={Menu01Icon}
+                      className="mt-0.5"
+                      strokeWidth={2}
+                    />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-75 sm:w-100 gap-0">
+                  <SheetHeader>
+                    <SheetTitle className="text-left">Categories</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col h-full overflow-y-auto">
+                    <Accordion type="multiple" className="w-full">
+                      {categoriesTree?.map((category) =>
+                        category.children && category.children.length > 0 ? (
+                          <AccordionItem
+                            key={category.id}
+                            value={category.id}
+                            className="px-4"
                           >
-                            {category.name}
-                          </Link>
-                        </div>
-                      )
-                    ))}
-                  </Accordion>
-                </div>
-              </SheetContent>
-            </Sheet>
+                            <AccordionTrigger className="text-sm font-medium py-2">
+                              {category.name}
+                            </AccordionTrigger>
+                            <AccordionContent className="[&_a]:no-underline">
+                              <ul className="flex flex-col gap-2 pl-3">
+                                {category.children.map((child) => (
+                                  <li key={child.id} className="py-0.5">
+                                    <Link
+                                      href={`/category/${child.slug}`}
+                                      className="text-sm text-muted-foreground no-underline! hover:text-foreground"
+                                    >
+                                      {child.name}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </AccordionContent>
+                          </AccordionItem>
+                        ) : (
+                          <div
+                            key={category.id}
+                            className="not-last:border-b flex px-4"
+                          >
+                            <Link
+                              href={`/category/${category.slug}`}
+                              className="flex flex-1 items-start justify-between py-2 text-left text-sm font-medium"
+                            >
+                              {category.name}
+                            </Link>
+                          </div>
+                        ),
+                      )}
+                    </Accordion>
+                  </div>
+                </SheetContent>
+              </Sheet>
+              <ThemeToggle />
+            </div>
             <Logo />
             <GlobalSearch className="hidden lg:flex max-w-xl" />
-            <div className="flex items-center gap-1.5 lg:gap-3 ">
+            <div className="flex items-center gap-1.5 lg:gap-3">
+              <div className="hidden lg:flex">
+                <ThemeToggle />
+              </div>
               <Button
                 variant="ghost"
                 className="hover:bg-transparent cursor-pointer flex lg:hidden"
                 size="icon"
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
               >
-                <HugeiconsIcon icon={Search} className="mt-0.5" strokeWidth={2} />
+                <HugeiconsIcon
+                  icon={Search}
+                  className="mt-0.5"
+                  strokeWidth={2}
+                />
               </Button>
               <Button
                 variant="ghost"
                 className="hover:bg-transparent cursor-pointer hidden lg:flex"
                 size="icon"
               >
-                <HugeiconsIcon icon={Heart} className="mt-0.5" strokeWidth={2} />
+                <HugeiconsIcon
+                  icon={Heart}
+                  className="mt-0.5"
+                  strokeWidth={2}
+                />
               </Button>
               <Button
                 variant="ghost"
                 className="hover:bg-transparent cursor-pointer"
                 size="icon"
               >
-                <HugeiconsIcon icon={ShoppingCart02Icon} className="mt-0.5" strokeWidth={2} />
+                <HugeiconsIcon
+                  icon={ShoppingCart02Icon}
+                  className="mt-0.5"
+                  strokeWidth={2}
+                />
               </Button>
-              <Button variant="ghost" className="text-black hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0 hidden lg:flex">
-                <HugeiconsIcon icon={User03Icon} className="mt-0.5" strokeWidth={2} />
+              <Button
+                variant="ghost"
+                className="text-black dark:text-white hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0 hidden lg:flex"
+              >
+                <HugeiconsIcon
+                  icon={User03Icon}
+                  className="mt-0.5"
+                  strokeWidth={2}
+                />
                 LOGIN
               </Button>
             </div>
@@ -159,9 +205,15 @@ export default function HomeHeader() {
                   <NavigationMenuItem key={category.id}>
                     {category.children && category.children.length > 0 ? (
                       <>
-                        <NavigationMenuTrigger className="h-7">{category.name}</NavigationMenuTrigger>
+                        <NavigationMenuTrigger className="h-7">
+                          {category.name}
+                        </NavigationMenuTrigger>
                         <NavigationMenuContent
-                          className={categoriesTree && index >= categoriesTree.length / 2 ? "lg:right-0 lg:left-auto" : ""}
+                          className={
+                            categoriesTree && index >= categoriesTree.length / 2
+                              ? "lg:right-0 lg:left-auto"
+                              : ""
+                          }
                         >
                           <ul className="flex flex-col flex-wrap max-h-96 w-max p-1">
                             {category.children.map((child) => (
@@ -176,7 +228,10 @@ export default function HomeHeader() {
                         </NavigationMenuContent>
                       </>
                     ) : (
-                      <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "h-7")} href={`/category/${category.slug}`}>
+                      <NavigationMenuLink
+                        className={cn(navigationMenuTriggerStyle(), "h-7")}
+                        href={`/category/${category.slug}`}
+                      >
                         {category.name}
                       </NavigationMenuLink>
                     )}
@@ -188,9 +243,10 @@ export default function HomeHeader() {
         </Container>
       </div>
       <div className="absolute shadow-md z-10 bg-white w-full">
-        {showMobileSearch &&
-          <GlobalSearch className="flex lg:hidden" autoFocus />}
+        {showMobileSearch && (
+          <GlobalSearch className="flex lg:hidden" autoFocus />
+        )}
       </div>
-    </header >
+    </header>
   );
 }

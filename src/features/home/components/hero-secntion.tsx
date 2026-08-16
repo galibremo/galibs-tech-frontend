@@ -40,7 +40,11 @@ export default function HeroSection() {
               key={index}
             >
               <Image
-                src={offer.bannerImageUrl || "/offers-1.webp"}
+                src={
+                  offer.bannerImageUrl || index
+                    ? "/offers-1.webp"
+                    : "/offers-2.webp"
+                }
                 alt={offer.name || "hero slide image"}
                 fill
                 className="rounded-lg object-cover"
