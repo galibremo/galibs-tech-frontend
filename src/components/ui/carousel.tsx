@@ -239,5 +239,63 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselDots,
   useCarousel,
 }
+
+function CarouselDots({ className }: React.ComponentProps<"div">) {
+  const { api } = useCarousel()
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
+
+  const onSelect = React.useCallback((api: CarouselApi) => {
+    if (!api) return
+    setSelectedIndex(api.selectedScrollSnap())
+  }, [])
+
+  const onInit = React.useCallback((api: CarouselApi) => {
+    if (!api) return
+    setScrollSnaps(api.scrollSnapList())
+  }, [])
+
+  React.useEffect(() => {
+    if (!api) return
+    onInit(api)
+    onSelect(api)
+    api.on("reInit", onInit)
+    api.on("reInit", onSelect)
+    api.on("select", onSelect)
+
+    return () => {
+      api?.off("select", onSelect)
+    }
+  }, [api, onInit, onSelect])
+
+  if (scrollSnaps.length <= 1) return null
+
+  return (
+    <div
+      data-slot="carousel-dots"
+      className={cn(
+        "absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-center gap-1.5 z-10 p-1.5 rounded-full bg-black/25 backdrop-blur-sm",
+        className
+      )}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          type="button"
+          aria-label={`Go to slide ${index + 1}`}
+          onClick={() => api?.scrollTo(index)}
+          className={cn(
+            "h-2.5 rounded-full transition-all duration-300 cursor-pointer focus:outline-none",
+            index === selectedIndex
+              ? "w-7 bg-white shadow-xs"
+              : "w-2.5 bg-white/50 hover:bg-white/80"
+          )}
+        />
+      ))}
+    </div>
+  )
+}
+
