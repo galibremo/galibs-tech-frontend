@@ -71,7 +71,7 @@ export default function HomeHeader() {
   const { data: categoriesTree } = useCategoriesTreeQuery();
 
   return (
-    <header>
+    <header className="relative z-50">
       <div className="shadow-2xs">
         <Container>
           <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
@@ -209,11 +209,12 @@ export default function HomeHeader() {
                           {category.name}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent
-                          className={
+                          className={cn(
+                            "z-50",
                             categoriesTree && index >= categoriesTree.length / 2
                               ? "lg:right-0 lg:left-auto"
-                              : ""
-                          }
+                              : "",
+                          )}
                         >
                           <ul className="flex flex-col flex-wrap max-h-96 w-max p-1">
                             {category.children.map((child) => (
