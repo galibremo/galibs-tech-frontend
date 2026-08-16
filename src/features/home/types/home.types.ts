@@ -43,6 +43,22 @@ export interface HeroSection {
   updatedAt: string;
 }
 
+export interface Offer {
+  id: string;
+  name: string;
+  slug: string;
+  type: string;
+  description: string | null;
+  bannerImageUrl: string | null;
+  isActive: boolean;
+  startsAt: string;
+  endsAt: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Promotional {
   heroSlides: HeroSection[];
+  offers: Offer[];
 }
