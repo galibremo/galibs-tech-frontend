@@ -26,6 +26,14 @@ export interface CategoryTreeItem extends Category {
   children: CategoryTreeItem[];
 }
 
+export interface CategoriesListResponse {
+  rows: Category[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+
 export interface HeroSection {
   id: string;
   title: string | null;

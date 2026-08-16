@@ -1,5 +1,6 @@
 import { fetchClient } from "@/lib/api/client";
 import type {
+  CategoriesListResponse,
   CategoryTreeItem,
   Promotional,
 } from "@/features/home/types/home.types";
@@ -11,6 +12,15 @@ export async function categoriesTree(): Promise<CategoryTreeItem[]> {
     url: apiRoute.categoriesTree,
   });
 }
+
+export async function categoriesList(params?: { page?: number; pageSize?: number }): Promise<CategoriesListResponse> {
+  return fetchClient<CategoriesListResponse>({
+    method: "GET",
+    url: apiRoute.categories,
+    params,
+  });
+}
+
 
 export async function promotionalData(): Promise<Promotional> {
   return fetchClient<Promotional>({

@@ -6,6 +6,13 @@ export const categoriesTreeKeys = {
   detail: (id: string) => [...categoriesTreeKeys.details(), id] as const,
 };
 
+export const categoriesListKeys = {
+  all: ["categories_list"] as const,
+  lists: () => [...categoriesListKeys.all, "list"] as const,
+  list: (params?: object) => [...categoriesListKeys.lists(), params] as const,
+};
+
+
 export const promotionalDataKeys = {
   all: ["promotional"] as const,
   lists: () => [...promotionalDataKeys.all, "list"] as const,
