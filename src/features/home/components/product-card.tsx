@@ -18,7 +18,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col justify-between h-full bg-white dark:bg-card border border-border/40 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200"
+      className="group relative flex flex-col justify-between h-full bg-white dark:bg-card border border-border/40 dark:border-border/60 rounded-xl overflow-hidden shadow-xs hover:shadow-md dark:hover:shadow-[0_10px_24px_-4px_rgba(255,255,255,0.1)] dark:hover:border-border/80 transition-all duration-200"
     >
       {/* Top Badge: Savings */}
       {hasSavings && (
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       )}
 
       {/* Image Thumbnail Container */}
-      <div className="relative w-full aspect-square p-4 sm:p-5 flex items-center justify-center bg-white dark:bg-card">
+      <div className="relative w-full aspect-square p-4 sm:p-5 flex items-center justify-center">
         {product.thumbnailUrl ? (
           <Image
             src={product.thumbnailUrl}
@@ -51,7 +51,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Details Container */}
-      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between border-t border-border/30 bg-white dark:bg-card">
+      <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between border-t border-border/30">
         <h3 className="text-xs sm:text-sm font-medium text-foreground transition-colors line-clamp-2 leading-snug mb-3">
           {product.name}
         </h3>

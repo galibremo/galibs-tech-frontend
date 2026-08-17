@@ -72,7 +72,7 @@ export default function HomeHeader() {
 
   return (
     <header className="relative z-50">
-      <div className="shadow-2xs">
+      <div className="border-b border-border/40 dark:border-border/80">
         <Container>
           <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
             <div className="flex lg:hidden items-center gap-1.5 lg:gap-3">
@@ -196,7 +196,7 @@ export default function HomeHeader() {
           </div>
         </Container>
       </div>
-      <div className="shadow-2xs hidden lg:block">
+      <div className="border-b border-border/40 dark:border-border/80 hidden lg:block">
         <Container>
           <div className="flex justify-center p-2">
             <NavigationMenu viewport={false}>
@@ -243,7 +243,7 @@ export default function HomeHeader() {
           </div>
         </Container>
       </div>
-      <div className="absolute shadow-md z-10 bg-white w-full">
+      <div className="absolute shadow-md z-10 bg-background w-full">
         {showMobileSearch && (
           <GlobalSearch className="flex lg:hidden" autoFocus />
         )}

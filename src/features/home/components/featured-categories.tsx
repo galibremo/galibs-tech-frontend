@@ -73,7 +73,7 @@ export default function FeaturedCategories() {
             <Link
               key={category.id || category.slug}
               href={`/category/${category.slug}`}
-              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-card border border-border/40 hover:shadow-md transition-all duration-200 text-center h-full min-h-27.5 sm:min-h-31"
+              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-card border border-border/40 dark:border-border/60 shadow-xs hover:shadow-md dark:hover:shadow-[0_10px_24px_-4px_rgba(255,255,255,0.1)] dark:hover:border-border/80 transition-all duration-200 text-center h-full min-h-27.5 sm:min-h-31"
             >
               <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground transition-colors">
                 {category.imageUrl && (

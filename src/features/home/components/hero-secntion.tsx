@@ -70,6 +70,8 @@ export default function HeroSection() {
                       src={slides.imageUrl}
                       alt={slides.altText || "hero slide image"}
                       fill
+                      sizes="(max-width: 1024px) 100vw, 75vw"
+                      priority={index === 0}
                       className="rounded-lg object-cover object-center"
                     />
                   </div>
@@ -91,6 +93,8 @@ export default function HeroSection() {
                   }
                   alt={offer.name || "hero slide image"}
                   fill
+                  sizes="(max-width: 1024px) 50vw, 25vw"
+                  priority
                   className="rounded-lg object-cover"
                 />
               </div>
