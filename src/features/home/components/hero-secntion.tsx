@@ -30,7 +30,7 @@ export default function HeroSection() {
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     observer.observe(node);
@@ -39,7 +39,8 @@ export default function HeroSection() {
 
   // Automatic carousel loop when section is in viewport
   React.useEffect(() => {
-    if (!api || !isInView || !heroSectionData || heroSectionData.length <= 1) return;
+    if (!api || !isInView || !heroSectionData || heroSectionData.length <= 1)
+      return;
 
     const interval = setInterval(() => {
       if (api.canScrollNext()) {
@@ -47,7 +48,7 @@ export default function HeroSection() {
       } else {
         api.scrollTo(0);
       }
-    }, 4000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [api, isInView, heroSectionData]);
@@ -85,9 +86,8 @@ export default function HeroSection() {
               >
                 <Image
                   src={
-                    offer.bannerImageUrl || (index === 0
-                      ? "/offers-1.webp"
-                      : "/offers-2.webp")
+                    offer.bannerImageUrl ||
+                    (index === 0 ? "/offers-1.webp" : "/offers-2.webp")
                   }
                   alt={offer.name || "hero slide image"}
                   fill

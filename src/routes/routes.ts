@@ -56,6 +56,7 @@ export const apiRoute = {
   categoriesTree: "/categories/tree",
 
   promotional: "/promotional",
+  products: "/products",
 } as const;
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;

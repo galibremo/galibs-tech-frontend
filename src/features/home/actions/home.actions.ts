@@ -2,6 +2,7 @@ import { fetchClient } from "@/lib/api/client";
 import type {
   CategoriesListResponse,
   CategoryTreeItem,
+  FeaturedProductsListResponse,
   Promotional,
 } from "@/features/home/types/home.types";
 import { apiRoute } from "@/routes/routes";
@@ -21,10 +22,22 @@ export async function categoriesList(params?: { page?: number; pageSize?: number
   });
 }
 
-
 export async function promotionalData(): Promise<Promotional> {
   return fetchClient<Promotional>({
     method: "GET",
     url: apiRoute.promotional,
   });
 }
+
+export async function featuredProducts(params?: { pageSize?: number }): Promise<FeaturedProductsListResponse> {
+  return fetchClient<FeaturedProductsListResponse>({
+    method: "GET",
+    url: apiRoute.products,
+    params: {
+      featured: true,
+      pageSize: 10,
+      ...params,
+    },
+  });
+}
+

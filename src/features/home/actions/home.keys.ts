@@ -20,3 +20,10 @@ export const promotionalDataKeys = {
   details: () => [...promotionalDataKeys.all, "detail"] as const,
   detail: (id: string) => [...promotionalDataKeys.details(), id] as const,
 };
+
+export const featuredProductsKeys = {
+  all: ["featured_products"] as const,
+  lists: () => [...featuredProductsKeys.all, "list"] as const,
+  list: (params?: object) => [...featuredProductsKeys.lists(), params] as const,
+};
+

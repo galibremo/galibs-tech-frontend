@@ -73,9 +73,9 @@ export default function FeaturedCategories() {
             <Link
               key={category.id || category.slug}
               href={`/category/${category.slug}`}
-              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-card border border-border/40 hover:border-primary/40 hover:shadow-md transition-all duration-200 text-center h-full min-h-27.5 sm:min-h-31"
+              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-card border border-border/40 hover:shadow-md transition-all duration-200 text-center h-full min-h-27.5 sm:min-h-31"
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground transition-colors">
                 {category.imageUrl && (
                   <Image
                     src={category.imageUrl}
@@ -86,7 +86,7 @@ export default function FeaturedCategories() {
                   />
                 )}
               </div>
-              <span className="text-xs sm:text-sm font-medium text-foreground group-hover:text-primary transition-colors text-center line-clamp-2 mt-2">
+              <span className="text-xs sm:text-sm font-medium text-foreground transition-colors text-center line-clamp-2 mt-2">
                 {category.name}
               </span>
             </Link>

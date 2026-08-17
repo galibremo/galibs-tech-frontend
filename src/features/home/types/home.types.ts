@@ -70,3 +70,25 @@ export interface Promotional {
   heroSlides: HeroSection[];
   offers: Offer[];
 }
+
+export interface FeaturedProduct {
+  id: string;
+  name: string;
+  slug: string;
+  thumbnailUrl: string | null;
+  price: number;
+  regularPrice: number | null;
+  saveAmount: number | null;
+  savePercent: number | null;
+  earnPoints?: number;
+  availability: "IN_STOCK" | "OUT_OF_STOCK" | "LOW_STOCK" | "PRE_ORDER" | "UPCOMING";
+  featuredSortOrder: number;
+}
+
+export interface FeaturedProductsListResponse {
+  rows: FeaturedProduct[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+

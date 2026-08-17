@@ -1,4 +1,5 @@
 import FeaturedCategories from "./featured-categories";
+import FeaturedProducts from "./featured-products";
 import HeroSection from "./hero-secntion";
 
 export default function HomePage() {
@@ -6,7 +7,9 @@ export default function HomePage() {
     <div>
       <HeroSection />
       <FeaturedCategories />
+      <FeaturedProducts />
     </div>
   );
 }
+
 
