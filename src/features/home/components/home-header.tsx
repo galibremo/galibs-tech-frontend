@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import Link from "next/link";
 import ThemeToggle from "@/components/custom-ui/theme-toggle";
+import { usePathname } from "next/navigation";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
@@ -67,11 +68,34 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem";
 
 export default function HomeHeader() {
+  const pathname = usePathname();
+  const [isScrolled, setIsScrolled] = React.useState(false);
   const [showMobileSearch, setShowMobileSearch] = React.useState(false);
   const { data: categoriesTree } = useCategoriesTreeQuery();
 
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [pathname]);
+
   return (
-    <header className="sticky top-0 z-50">
+    <header
+      className={cn(
+        "sticky top-0 z-50 transition-colors duration-200",
+        isScrolled
+          ? "bg-muted/50 backdrop-blur-sm"
+          : "bg-transparent backdrop-blur-none",
+      )}
+    >
       <div className="border-b border-border/40 dark:border-border/80">
         <Container>
           <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
