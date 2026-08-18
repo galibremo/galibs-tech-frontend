@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { categoriesList, categoriesTree, featuredProducts, promotionalData } from "./home.actions";
-import { categoriesListKeys, categoriesTreeKeys, featuredProductsKeys, promotionalDataKeys } from "./home.keys";
+import { categoriesList, categoriesTree, featuredProducts, newArrivalProducts, promotionalData } from "./home.actions";
+import { categoriesListKeys, categoriesTreeKeys, featuredProductsKeys, newArrivalProductsKeys, promotionalDataKeys } from "./home.keys";
 
 export function useCategoriesTreeQuery() {
   return useQuery({
@@ -30,4 +30,12 @@ export function useFeaturedProductsQuery(params?: { pageSize?: number }) {
     queryFn: () => featuredProducts(params),
   });
 }
+
+export function useNewArrivalProductsQuery(params?: { pageSize?: number }) {
+  return useQuery({
+    queryKey: newArrivalProductsKeys.list(params),
+    queryFn: () => newArrivalProducts(params),
+  });
+}
+
 

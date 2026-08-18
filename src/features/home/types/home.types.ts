@@ -92,3 +92,23 @@ export interface FeaturedProductsListResponse {
   pageSize: number;
 }
 
+export interface ProductItem {
+  id: string;
+  name: string;
+  slug: string;
+  thumbnailUrl: string | null;
+  price: number;
+  regularPrice: number | null;
+  saveAmount?: number | null;
+  savePercent?: number | null;
+  availability: "IN_STOCK" | "OUT_OF_STOCK" | "LOW_STOCK" | "PRE_ORDER" | "UPCOMING";
+}
+
+export interface ProductsListResponse {
+  rows: ProductItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+

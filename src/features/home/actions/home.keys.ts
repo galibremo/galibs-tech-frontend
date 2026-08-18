@@ -27,3 +27,9 @@ export const featuredProductsKeys = {
   list: (params?: object) => [...featuredProductsKeys.lists(), params] as const,
 };
 
+export const newArrivalProductsKeys = {
+  all: ["new_arrival_products"] as const,
+  lists: () => [...newArrivalProductsKeys.all, "list"] as const,
+  list: (params?: object) => [...newArrivalProductsKeys.lists(), params] as const,
+};
+

@@ -4,11 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { Container } from "@/components/custom-ui/container";
 import { Button } from "@/components/ui/button";
-import { useFeaturedProductsQuery } from "../actions/home.queries";
+import { useNewArrivalProductsQuery } from "../actions/home.queries";
 import ProductCard from "./product-card";
 
-export default function FeaturedProducts() {
-  const { data, isLoading } = useFeaturedProductsQuery({ pageSize: 10 });
+export default function NewArrivalProducts() {
+  const { data, isLoading } = useNewArrivalProductsQuery({ pageSize: 10 });
 
   // Ensure maximum of 10 products are shown
   const products = React.useMemo(() => {
@@ -20,10 +20,10 @@ export default function FeaturedProducts() {
       {/* Header */}
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-          Featured Products
+          New Arrival Products
         </h2>
         <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          Check & Get Your Desired Product!
+          Explore the latest additions to our store!
         </p>
       </div>
 
@@ -53,7 +53,7 @@ export default function FeaturedProducts() {
           size="sm"
           className="px-6 rounded-full font-medium"
         >
-          <Link href="/products?featured=true">View All</Link>
+          <Link href="/products">View All</Link>
         </Button>
       </div>
     </Container>

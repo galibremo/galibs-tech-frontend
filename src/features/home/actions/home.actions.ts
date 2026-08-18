@@ -3,6 +3,7 @@ import type {
   CategoriesListResponse,
   CategoryTreeItem,
   FeaturedProductsListResponse,
+  ProductsListResponse,
   Promotional,
 } from "@/features/home/types/home.types";
 import { apiRoute } from "@/routes/routes";
@@ -40,4 +41,16 @@ export async function featuredProducts(params?: { pageSize?: number }): Promise<
     },
   });
 }
+
+export async function newArrivalProducts(params?: { pageSize?: number }): Promise<ProductsListResponse> {
+  return fetchClient<ProductsListResponse>({
+    method: "GET",
+    url: apiRoute.products,
+    params: {
+      pageSize: 10,
+      ...params,
+    },
+  });
+}
+
 

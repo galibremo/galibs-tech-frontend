@@ -1,6 +1,7 @@
 import FeaturedCategories from "./featured-categories";
 import FeaturedProducts from "./featured-products";
 import HeroSection from "./hero-secntion";
+import NewArrivalProducts from "./new-arrival-products";
 
 export default function HomePage() {
   return (
@@ -8,8 +9,10 @@ export default function HomePage() {
       <HeroSection />
       <FeaturedCategories />
       <FeaturedProducts />
+      <NewArrivalProducts />
     </div>
   );
 }
+
 
 

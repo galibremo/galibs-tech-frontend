@@ -71,7 +71,7 @@ export default function HomeHeader() {
   const { data: categoriesTree } = useCategoriesTreeQuery();
 
   return (
-    <header className="relative z-50">
+    <header className="sticky top-0 z-50">
       <div className="border-b border-border/40 dark:border-border/80">
         <Container>
           <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
