@@ -44,14 +44,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       )}
 
       {/* Image Thumbnail Container */}
-      <div className="relative w-full aspect-4/3 flex items-center justify-center">
+      <div className="relative w-full aspect-4/3 flex items-center justify-center overflow-hidden">
         {product.thumbnailUrl ? (
           <Image
             src={product.thumbnailUrl}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
-            className="object-cover p-2 transition-transform duration-300 group-hover:scale-102"
+            className="object-cover transition-transform duration-300 group-hover:scale-104"
           />
         ) : (
           <div className="w-full h-full bg-muted/40 rounded-lg flex items-center justify-center text-xs text-muted-foreground">
@@ -61,7 +61,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Details Container */}
-      <div className="p-2 flex flex-col flex-1 justify-between border-t border-border/30">
+      <div className="p-3 flex flex-col flex-1 justify-between border-t border-border/30">
         <h3 className="text-xs sm:text-sm font-medium text-foreground transition-colors line-clamp-2 leading-snug mb-3">
           {product.name}
         </h3>
