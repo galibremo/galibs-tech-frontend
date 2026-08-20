@@ -62,7 +62,7 @@ export default function FeaturedCategories() {
           {Array.from({ length: 16 }).map((_, i) => (
             <div
               key={i}
-              className="h-28 sm:h-32 rounded-2xl bg-muted/60 animate-pulse"
+              className="h-28 sm:h-32 rounded-lg bg-muted/60 animate-pulse"
             />
           ))}
         </div>
@@ -73,7 +73,7 @@ export default function FeaturedCategories() {
             <Link
               key={category.id || category.slug}
               href={`/category/${category.slug}`}
-              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-card border border-border/40 dark:border-border/60 shadow-xs hover:shadow-md dark:hover:shadow-[0_10px_24px_-4px_rgba(255,255,255,0.09)] dark:hover:border-border/80 transition-all duration-200 text-center h-full aspect-square"
+              className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-background border border-border shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200 text-center h-full aspect-square"
             >
               <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground transition-colors">
                 {category.imageUrl && (

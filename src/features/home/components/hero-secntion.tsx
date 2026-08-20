@@ -65,7 +65,7 @@ export default function HeroSection() {
             <CarouselContent>
               {heroSectionData?.map((slides, index) => (
                 <CarouselItem key={index}>
-                  <div className="relative aspect-video rounded-2xl p-1">
+                  <div className="relative aspect-video rounded-lg p-1">
                     <Image
                       src={slides.imageUrl}
                       alt={slides.altText || "hero slide image"}
@@ -83,7 +83,7 @@ export default function HeroSection() {
           <div className="flex flex-row lg:flex-col items-center gap-3 sm:gap-4.5 lg:gap-6 w-full lg:w-[25%]">
             {offerSEctionData?.slice(0, 2).map((offer, index) => (
               <div
-                className="relative rounded-2xl aspect-4/3 lg:aspect-auto lg:h-full w-full"
+                className="relative rounded-lg aspect-4/3 lg:aspect-auto lg:h-full w-full"
                 key={index}
               >
                 <Image

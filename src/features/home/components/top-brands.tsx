@@ -42,7 +42,7 @@ export default function TopBrands() {
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="h-24 sm:h-28 rounded-2xl bg-muted/60 animate-pulse border border-border/20"
+              className="h-24 sm:h-28 rounded-lg bg-muted/60 animate-pulse border border-border/20"
             />
           ))}
         </div>
@@ -56,15 +56,15 @@ export default function TopBrands() {
             }}
             className="w-full"
           >
-            <CarouselContent className="-ml-3">
+            <CarouselContent>
               {brands.map((brand) => (
                 <CarouselItem
                   key={brand.id || brand.slug}
-                  className="pl-3 basis-1/2 min-[375px]:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 xl:basis-1/8"
+                  className="basis-1/2 min-[375px]:basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 xl:basis-1/8 py-3"
                 >
                   <Link
                     href={`/products?brand=${brand.slug}`}
-                    className="group flex flex-col items-center justify-center p-3 rounded-2xl bg-white dark:bg-card border border-border/40 dark:border-border/60 shadow-xs dark:hover:border-border/80 transition-all duration-200 text-center h-24 sm:h-28"
+                    className="group flex flex-col items-center justify-center rounded-lg border border-border shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200 text-center h-24 sm:h-28"
                   >
                     <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground transition-colors overflow-hidden relative">
                       {brand.logoUrl ? (

@@ -256,7 +256,7 @@ export function ProfileUpdateForm({
 
         {/* Inputs Section */}
         <div className="flex flex-1 flex-col gap-4">
-          <div className="rounded-2xl border border-border/50 bg-muted/10 p-6 shadow-sm">
+          <div className="rounded-lg border border-border/50 bg-muted/10 p-6 shadow-sm">
             <FieldGroup className="gap-6">
               <div className="grid gap-6">
                 <Controller

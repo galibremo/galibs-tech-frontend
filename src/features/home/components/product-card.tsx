@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col justify-between h-full bg-white dark:bg-card border border-border/40 dark:border-border/60 rounded-xl overflow-hidden shadow-xs hover:shadow-md dark:hover:shadow-[0_10px_24px_-4px_rgba(255,255,255,0.09)] dark:hover:border-border/80 transition-all duration-200"
+      className="group relative flex flex-col justify-between h-full bg-background border border-border rounded-lg overflow-hidden shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200"
     >
       {/* Top Badge: Savings */}
       {hasSavings && (
