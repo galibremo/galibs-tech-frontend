@@ -10,12 +10,8 @@ export default async function HomeLayout({
     <div className="flex min-h-screen flex-col justify-between">
       <HomeHeader />
       <main className="flex-1">{children}</main>
-      <HomeHighlights />
       <HomeNewsletter />
       <HomeFooter />
     </div>
   );
 }
-
-
-

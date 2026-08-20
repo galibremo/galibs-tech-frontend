@@ -111,4 +111,24 @@ export interface ProductsListResponse {
   pageSize: number;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+  description: string | null;
+  isActive: boolean;
+  isFeatured: boolean;
+  sortOrder: number;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
 
+export interface BrandsListResponse {
+  rows: Brand[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

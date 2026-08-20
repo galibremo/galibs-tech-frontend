@@ -1,5 +1,6 @@
 import { fetchClient } from "@/lib/api/client";
 import type {
+  BrandsListResponse,
   CategoriesListResponse,
   CategoryTreeItem,
   FeaturedProductsListResponse,
@@ -53,4 +54,15 @@ export async function newArrivalProducts(params?: { pageSize?: number }): Promis
   });
 }
 
-
+export async function brandsList(params?: {
+  page?: number;
+  pageSize?: number;
+  isFeatured?: boolean;
+  isActive?: boolean;
+}): Promise<BrandsListResponse> {
+  return fetchClient<BrandsListResponse>({
+    method: "GET",
+    url: apiRoute.brands,
+    params,
+  });
+}

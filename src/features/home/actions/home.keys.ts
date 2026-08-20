@@ -33,3 +33,8 @@ export const newArrivalProductsKeys = {
   list: (params?: object) => [...newArrivalProductsKeys.lists(), params] as const,
 };
 
+export const brandsListKeys = {
+  all: ["brands_list"] as const,
+  lists: () => [...brandsListKeys.all, "list"] as const,
+  list: (params?: object) => [...brandsListKeys.lists(), params] as const,
+};

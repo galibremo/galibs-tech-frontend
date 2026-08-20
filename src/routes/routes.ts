@@ -55,6 +55,10 @@ export const apiRoute = {
   categories: "/categories",
   categoriesTree: "/categories/tree",
 
+  brands: "/brands",
+  brand: (id: string) => `/brands/${id}`,
+  brandBySlug: (slug: string) => `/brands/slug/${slug}`,
+
   promotional: "/promotional",
   products: "/products",
 } as const;
