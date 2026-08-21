@@ -40,6 +40,9 @@ import React from "react";
 import Link from "next/link";
 import ThemeToggle from "@/components/custom-ui/theme-toggle";
 import { usePathname } from "next/navigation";
+import { route } from "@/routes/routes";
+import { HeaderUserNav } from "@/features/home/components/header-user-nav";
+import { useAuth } from "@/hooks/use-auth";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
@@ -72,6 +75,7 @@ export default function HomeHeader() {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [showMobileSearch, setShowMobileSearch] = React.useState(false);
   const { data: categoriesTree } = useCategoriesTreeQuery();
+  const { user } = useAuth();
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -173,7 +177,7 @@ export default function HomeHeader() {
               </div>
               <Button
                 variant="ghost"
-                className="hover:bg-transparent cursor-pointer flex lg:hidden"
+                className="cursor-pointer flex lg:hidden"
                 size="icon"
                 onClick={() => setShowMobileSearch(!showMobileSearch)}
               >
@@ -185,7 +189,7 @@ export default function HomeHeader() {
               </Button>
               <Button
                 variant="ghost"
-                className="hover:bg-transparent cursor-pointer hidden lg:flex"
+                className="cursor-pointer hidden lg:flex"
                 size="icon"
               >
                 <HugeiconsIcon
@@ -194,28 +198,33 @@ export default function HomeHeader() {
                   strokeWidth={2}
                 />
               </Button>
-              <Button
-                variant="ghost"
-                className="hover:bg-transparent cursor-pointer"
-                size="icon"
-              >
+              <Button variant="ghost" className="cursor-pointer" size="icon">
                 <HugeiconsIcon
                   icon={ShoppingCart02Icon}
                   className="mt-0.5"
                   strokeWidth={2}
                 />
               </Button>
-              <Button
-                variant="ghost"
-                className="text-black dark:text-white hover:bg-transparent cursor-pointer gap-1.5 tracking-wide px-0 hidden lg:flex"
-              >
-                <HugeiconsIcon
-                  icon={User03Icon}
-                  className="mt-0.5"
-                  strokeWidth={2}
-                />
-                LOGIN
-              </Button>
+              {user ? (
+                <HeaderUserNav />
+              ) : (
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="text-black dark:text-white cursor-pointer gap-1.5 tracking-wide px-0 hidden lg:flex"
+                >
+                  <Link
+                    href={`${route.protected.login}?redirect=${encodeURIComponent(route.public.home)}`}
+                  >
+                    <HugeiconsIcon
+                      icon={User03Icon}
+                      className="mt-0.5"
+                      strokeWidth={2}
+                    />
+                    LOGIN
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </Container>

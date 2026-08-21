@@ -52,8 +52,6 @@ export function LoginForm({ loginMode }: { loginMode: LoginMode }) {
   const { setUser } = useAuth();
   const queryClient = useQueryClient();
 
-
-
   const [passwordErrorMessage, setPasswordErrorMessage] = useState<
     string | null
   >(null);
@@ -87,7 +85,6 @@ export function LoginForm({ loginMode }: { loginMode: LoginMode }) {
     isLoggingInWithGooglePending || isGoogleLoginSuccess;
   const isRequestingMagicLink =
     isRequestingMagicLinkPending || isMagicLinkSuccess;
-
 
   const handleGoogleSuccess = async (
     credentialResponse: CredentialResponse,

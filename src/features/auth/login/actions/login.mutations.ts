@@ -10,7 +10,7 @@ import {
   requestMagicLink,
   verifyMagicLink,
 } from "./login.actions";
-import { getDefaultLoginRedirect } from "@/routes/routes";
+import { getDefaultLoginRedirect, route } from "@/routes/routes";
 
 export const useLogin = () => {
   const { setUser } = useAuth();
@@ -30,11 +30,13 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
+  const { setUser } = useAuth();
   const router = useRouter();
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      router.push("/login");
+      setUser(null);
+      router.push(route.public.home);
       router.refresh();
     },
   });
