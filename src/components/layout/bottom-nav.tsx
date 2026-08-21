@@ -47,7 +47,9 @@ export function BottomNav() {
     },
     {
       name: user ? "Account" : "Login",
-      href: user ? route.private.profile : route.protected.login,
+      href: user
+        ? route.private.profile
+        : `${route.protected.login}?redirect=${encodeURIComponent(route.public.home)}`,
       icon: User03Icon,
     },
   ];
@@ -57,7 +59,7 @@ export function BottomNav() {
       aria-label="Mobile Navigation"
       className="fixed bottom-0 left-0 right-0 z-50 min-[900px]:hidden bg-background/95 backdrop-blur-md border-t border-border shadow-lg transition-all duration-200"
     >
-      <div className="mx-auto grid grid-cols-5 h-16 max-w-lg px-1 pb-[env(safe-area-inset-bottom)]">
+      <div className="grid grid-cols-5 h-16 px-1 pb-[env(safe-area-inset-bottom)]">
         {navItems.map((item) => {
           const isActive =
             item.href === "/"
@@ -72,7 +74,7 @@ export function BottomNav() {
                 "group relative flex flex-col items-center justify-center py-1.5 px-1 transition-colors duration-150 rounded-lg my-1",
                 isActive
                   ? "text-primary font-semibold"
-                  : "text-muted-foreground hover:text-foreground active:scale-95"
+                  : "text-muted-foreground hover:text-foreground active:scale-95",
               )}
             >
               {/* Active Indicator Highlight */}
@@ -85,7 +87,7 @@ export function BottomNav() {
                 size={22}
                 className={cn(
                   "transition-transform duration-200 group-active:scale-90",
-                  isActive ? "stroke-[2.25px]" : "stroke-[1.75px]"
+                  isActive ? "stroke-[2.25px]" : "stroke-[1.75px]",
                 )}
               />
               <span className="mt-1 text-[11px] font-medium leading-none truncate max-w-full">
