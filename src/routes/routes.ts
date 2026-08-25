@@ -2,6 +2,7 @@ export const route = {
   public: {
     home: "/",
     cart: "/cart",
+    productDetails: (slug: string) => `/product/${slug}`,
   },
   private: {
     dashboard: "/dashboard",
@@ -62,6 +63,8 @@ export const apiRoute = {
 
   promotional: "/promotional",
   products: "/products",
+  productBySlug: (slug: string) => `/products/${slug}`,
+  productSpecs: (id: string) => `/products/${id}/specifications`,
 } as const;
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;
