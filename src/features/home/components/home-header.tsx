@@ -8,7 +8,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Heart,
   Search,
-  ShoppingCart02Icon,
   User03Icon,
   Menu01Icon,
 } from "@hugeicons/core-free-icons";
@@ -43,6 +42,7 @@ import { usePathname } from "next/navigation";
 import { route } from "@/routes/routes";
 import { HeaderUserNav } from "@/features/home/components/header-user-nav";
 import { useAuth } from "@/hooks/use-auth";
+import { CartSheet } from "@/components/common/cart/cart-sheet";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
@@ -198,13 +198,7 @@ export default function HomeHeader() {
                   strokeWidth={2}
                 />
               </Button>
-              <Button variant="ghost" className="cursor-pointer" size="icon">
-                <HugeiconsIcon
-                  icon={ShoppingCart02Icon}
-                  className="mt-0.5"
-                  strokeWidth={2}
-                />
-              </Button>
+              <CartSheet />
               {user ? (
                 <HeaderUserNav />
               ) : (

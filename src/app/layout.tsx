@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Geist,
-  Geist_Mono,
-  Figtree,
-} from "next/font/google";
+import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -14,6 +10,7 @@ import { Toaster } from "sonner";
 import { getSessionUser } from "@/lib/services";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { RedirectProvider } from "@/providers/redirect-provider";
+import CartProvider from "@/providers/cart-provider";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -62,10 +59,12 @@ export default async function RootLayout({
               disableTransitionOnChange
             >
               <QueryProvider>
-                <RedirectProvider>
-                  <TooltipProvider>{children}</TooltipProvider>
-                </RedirectProvider>
-                <Toaster richColors position="top-right" />
+                <CartProvider>
+                  <RedirectProvider>
+                    <TooltipProvider>{children}</TooltipProvider>
+                  </RedirectProvider>
+                </CartProvider>
+                <Toaster richColors position="bottom-right" />
               </QueryProvider>
             </ThemeProvider>
           </NuqsAdapter>

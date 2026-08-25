@@ -1,6 +1,7 @@
 export const route = {
   public: {
     home: "/",
+    cart: "/cart",
   },
   private: {
     dashboard: "/dashboard",

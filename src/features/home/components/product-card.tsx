@@ -3,12 +3,31 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { FeaturedProduct, ProductItem } from "../types/home.types";
+import { useCart } from "@/context/cart-context";
+import { Button } from "@/components/ui/button";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ShoppingCart02Icon } from "@hugeicons/core-free-icons";
 
 interface ProductCardProps {
   product: FeaturedProduct | ProductItem;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      regularPrice: product.regularPrice,
+      thumbnailUrl: product.thumbnailUrl,
+    });
+  };
+
   const saveAmount =
     product.saveAmount ??
     (product.regularPrice && product.regularPrice > product.price
@@ -66,15 +85,27 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </h3>
 
-        <div className="flex items-baseline flex-wrap gap-1 mt-auto pt-1">
-          <span className="text-sm sm:text-base font-bold text-red-600 dark:text-red-500">
-            {product.price.toLocaleString()}৳
-          </span>
-          {hasRegularPrice && (
-            <span className="text-xs text-muted-foreground line-through font-normal">
-              {product.regularPrice?.toLocaleString()}৳
+        <div className="flex items-center justify-between gap-1 mt-auto pt-1">
+          <div className="flex items-baseline flex-wrap gap-1">
+            <span className="text-sm sm:text-base font-bold text-red-600 dark:text-red-500">
+              {product.price.toLocaleString()}৳
             </span>
-          )}
+            {hasRegularPrice && (
+              <span className="text-xs text-muted-foreground line-through font-normal">
+                {product.regularPrice?.toLocaleString()}৳
+              </span>
+            )}
+          </div>
+
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={handleAddToCart}
+            className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary hover:text-primary-foreground transition-colors"
+            title="Add to Cart"
+          >
+            <HugeiconsIcon icon={ShoppingCart02Icon} className="w-4 h-4" />
+          </Button>
         </div>
       </div>
     </Link>
