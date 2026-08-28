@@ -23,7 +23,7 @@ export function ProductDescriptionView({
         <img 
           src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=80" 
           alt="${productName} Overview"
-          class="w-full h-auto object-cover max-h-[420px]"
+          class="w-full h-auto object-cover max-h-105"
         />
       </div>
 

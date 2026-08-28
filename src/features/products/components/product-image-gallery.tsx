@@ -56,7 +56,7 @@ export function ProductImageGallery({
 
       {/* Small Thumbnails Selector */}
       {galleryList.length > 1 && (
-        <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex items-center justify-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
           {galleryList.map((url, idx) => {
             const isSelected = idx === selectedIndex;
             return (
@@ -64,7 +64,6 @@ export function ProductImageGallery({
                 key={`${url}-${idx}`}
                 type="button"
                 onClick={() => setSelectedIndex(idx)}
-                onMouseEnter={() => setSelectedIndex(idx)}
                 className={cn(
                   "relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 overflow-hidden shrink-0 bg-background transition-all cursor-pointer",
                   isSelected

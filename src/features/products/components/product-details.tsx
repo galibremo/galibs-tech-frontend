@@ -4,9 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ChevronRightIcon, Home01Icon } from "@hugeicons/core-free-icons";
+import { ChevronRightIcon, Home01Icon, AlertCircleIcon } from "@hugeicons/core-free-icons";
 
 import { Container } from "@/components/custom-ui/container";
+import { Button } from "@/components/ui/button";
 import {
   useProductDetailsQuery,
   useProductSpecsQuery,
@@ -17,136 +18,6 @@ import { ProductNavButtons } from "@/features/products/components/product-nav-bu
 import { ProductSpecificationsTable } from "@/features/products/components/product-specifications-table";
 import { ProductWarrantyCard } from "@/features/products/components/product-warranty-card";
 import { ProductDescriptionView } from "@/features/products/components/product-description-view";
-import type {
-  ProductDetails,
-  SpecGroup,
-} from "@/features/products/types/product.types";
-
-// Mock product details for immediate visual demonstration when backend item is absent
-const MOCK_PRODUCT: ProductDetails = {
-  id: "prod-demo-1",
-  type: "SIMPLE",
-  productCode: "ANKER-535-PS",
-  sku: "ANK-535-512WH",
-  name: "Anker 535 Portable Power Station (PowerHouse 512Wh)",
-  slug: "anker-535-portable-power-station",
-  brandId: "brand-1",
-  primaryCategoryId: "cat-1",
-  keyFeatures: [
-    "512Wh Capacity with 500W Continuous AC Output",
-    "LiFePO4 Batteries with 3,000+ Life Cycles to 80%",
-    "Built-in Warm Tone LED Ambient Light",
-    "9 Total Ports (4x AC, 1x USB-C 60W, 3x USB-A, 1x Car Socket)",
-    "Impact-Resistant Structure & 5-Year Full Device Warranty",
-  ],
-  price: 48500,
-  regularPrice: 55000,
-  maxPrice: null,
-  availability: "IN_STOCK",
-  stockQty: 15,
-  warrantyText: "2 Years Official Warranty",
-  warrantyMonths: 24,
-  emiMonthlyAmount: 4041,
-  thumbnailUrl:
-    "https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&w=800&q=80",
-  badges: ["Official Warranty", "Best Seller"],
-  shortDescription:
-    "Long-lasting 512Wh Portable Power Station with 500W Output and LiFePO4 Battery Cells.",
-  description: null,
-  isActive: true,
-  isFeatured: true,
-  brand: {
-    id: "brand-1",
-    name: "Anker",
-    slug: "anker",
-  },
-  primaryCategory: {
-    id: "cat-1",
-    name: "Power Station & Solar",
-    slug: "power-station",
-  },
-  images: [
-    {
-      id: "img-1",
-      productId: "prod-demo-1",
-      variantId: null,
-      url: "https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&w=800&q=80",
-      altText: "Front View",
-      sortOrder: 0,
-      isPrimary: true,
-    },
-    {
-      id: "img-2",
-      productId: "prod-demo-1",
-      variantId: null,
-      url: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
-      altText: "Side View",
-      sortOrder: 1,
-      isPrimary: false,
-    },
-    {
-      id: "img-3",
-      productId: "prod-demo-1",
-      variantId: null,
-      url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80",
-      altText: "Ports View",
-      sortOrder: 2,
-      isPrimary: false,
-    },
-  ],
-};
-
-const MOCK_SPECS: SpecGroup[] = [
-  {
-    id: "sg-1",
-    name: "General Information",
-    fields: [
-      { id: "sf-1", name: "Brand", value: "Anker" },
-      {
-        id: "sf-2",
-        name: "Model",
-        value: "535 Portable Power Station (PowerHouse 512Wh)",
-      },
-      {
-        id: "sf-3",
-        name: "Cell Chemistry",
-        value: "LiFePO4 (Lithium Iron Phosphate)",
-      },
-      {
-        id: "sf-4",
-        name: "Cycle Life",
-        value: "3,000+ Cycles to 80% Capacity",
-      },
-    ],
-  },
-  {
-    id: "sg-2",
-    name: "Output Ports",
-    fields: [
-      {
-        id: "sf-5",
-        name: "AC Outlets",
-        value: "4x 110V/500W Pure Sine Wave (750W Surge)",
-      },
-      { id: "sf-6", name: "USB-C Output", value: "1x 60W Power Delivery" },
-      { id: "sf-7", name: "USB-A Output", value: "3x 5V/2.4A (12W per port)" },
-      { id: "sf-8", name: "Car Socket", value: "1x 12V/10A (120W Max)" },
-    ],
-  },
-  {
-    id: "sg-3",
-    name: "Input & Charging",
-    fields: [
-      { id: "sf-9", name: "DC Adapter Input", value: "11-28V=10A (120W Max)" },
-      { id: "sf-10", name: "Solar Input", value: "11-28V=10A (120W Max)" },
-      {
-        id: "sf-11",
-        name: "Recharge Time",
-        value: "2.5 Hours to 80% (DC + USB-C Combined)",
-      },
-    ],
-  },
-];
 
 interface ProductDetailsProps {
   slug?: string;
@@ -156,22 +27,10 @@ export default function ProductDetails({ slug: propsSlug }: ProductDetailsProps)
   const params = useParams();
   const slug = propsSlug || (params.slug as string) || "";
 
-  const { data: fetchedProduct, isLoading } = useProductDetailsQuery(slug);
-  const { data: fetchedSpecs } = useProductSpecsQuery(fetchedProduct?.id);
+  const { data: product, isLoading, isError } = useProductDetailsQuery(slug);
+  const { data: fetchedSpecs } = useProductSpecsQuery(product?.id);
 
-  const product = fetchedProduct || {
-    ...MOCK_PRODUCT,
-    slug: slug || MOCK_PRODUCT.slug,
-    name: slug
-      ? slug
-          .split("-")
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(" ")
-      : MOCK_PRODUCT.name,
-  };
-
-  const specs =
-    fetchedSpecs && fetchedSpecs.length > 0 ? fetchedSpecs : MOCK_SPECS;
+  const specs = fetchedSpecs || [];
 
   if (isLoading) {
     return (
@@ -187,6 +46,23 @@ export default function ProductDetails({ slug: propsSlug }: ProductDetailsProps)
             </div>
           </div>
         </div>
+      </Container>
+    );
+  }
+
+  if (isError || !product) {
+    return (
+      <Container className="p-6 text-center py-20 min-h-[60vh] flex flex-col items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+          <HugeiconsIcon icon={AlertCircleIcon} className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
+        <p className="text-muted-foreground mb-6 max-w-md">
+          We couldn&apos;t find the product you are looking for. It may have been removed or the link is invalid.
+        </p>
+        <Button asChild>
+          <Link href="/">Back to Home</Link>
+        </Button>
       </Container>
     );
   }
