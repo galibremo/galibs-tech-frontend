@@ -210,7 +210,7 @@ export default function CatalogProductGrid({
                   variant="outline"
                   onClick={handleAddToCart}
                   disabled={product.availability === "OUT_OF_STOCK"}
-                  className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary! hover:text-primary-foreground! transition-colors"
                   title="Add to Cart"
                 >
                   <HugeiconsIcon

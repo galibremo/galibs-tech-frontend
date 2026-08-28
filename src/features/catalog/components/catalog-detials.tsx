@@ -12,7 +12,6 @@ import {
 import CatalogBreadcrumb from "./catalog-breadcrumb";
 import CatalogFilterSidebar from "./catalog-filter-sidebar";
 import CatalogToolbar from "./catalog-toolbar";
-import CatalogActiveFilters from "./catalog-active-filters";
 import CatalogProductGrid from "./catalog-product-grid";
 import CatalogPagination from "./catalog-pagination";
 import {
@@ -201,7 +200,7 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
         {/* Main 2-Column Catalog Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
           {/* Left Sticky Sidebar (Desktop Filter) */}
-          <aside className="hidden lg:block lg:col-span-1 sticky top-20">
+          <aside className="hidden lg:block lg:col-span-1 sticky top-30">
             <CatalogFilterSidebar
               facets={displayFacets}
               queryParams={queryParams}

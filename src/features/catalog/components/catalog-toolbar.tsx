@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { FilterIcon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
@@ -65,7 +64,8 @@ export default function CatalogToolbar({
             {categoryTitle}
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5 font-medium">
-            Showing {totalProducts} {totalProducts === 1 ? "product" : "products"} available
+            Showing {totalProducts}{" "}
+            {totalProducts === 1 ? "product" : "products"} available
           </p>
         </div>
 
@@ -83,8 +83,11 @@ export default function CatalogToolbar({
                 <span>Filter</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[360px] p-4 overflow-y-auto">
-              <SheetHeader className="mb-4 text-left">
+            <SheetContent
+              side="left"
+              className="w-75 sm:w-90 overflow-y-auto gap-0 px-3"
+            >
+              <SheetHeader className="text-left">
                 <SheetTitle className="text-base font-bold">Filters</SheetTitle>
               </SheetHeader>
               <CatalogFilterSidebar
@@ -100,8 +103,11 @@ export default function CatalogToolbar({
           {/* Limit selector */}
           <div className="hidden min-[480px]:flex items-center gap-1 text-xs">
             <span className="text-muted-foreground font-medium">Show:</span>
-            <Select value={String(queryParams.limit || 20)} onValueChange={handleLimitChange}>
-              <SelectTrigger className="h-9 text-xs w-[70px]">
+            <Select
+              value={String(queryParams.limit || 20)}
+              onValueChange={handleLimitChange}
+            >
+              <SelectTrigger className="h-9 text-xs w-17.5">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -115,9 +121,11 @@ export default function CatalogToolbar({
 
           {/* Sort selector */}
           <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-muted-foreground font-medium hidden sm:inline">Sort:</span>
+            <span className="text-muted-foreground font-medium hidden sm:inline">
+              Sort:
+            </span>
             <Select value={currentSort} onValueChange={handleSortChange}>
-              <SelectTrigger className="h-9 text-xs min-w-[140px]">
+              <SelectTrigger className="h-9 text-xs min-w-35">
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>

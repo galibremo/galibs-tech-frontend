@@ -51,19 +51,21 @@ export default function CatalogFilterSidebar({
   isLoading = false,
 }: CatalogFilterSidebarProps) {
   const [localMinPrice, setLocalMinPrice] = useState<string>(
-    queryParams.priceMin !== undefined ? String(queryParams.priceMin) : ""
+    queryParams.priceMin !== undefined ? String(queryParams.priceMin) : "",
   );
   const [localMaxPrice, setLocalMaxPrice] = useState<string>(
-    queryParams.priceMax !== undefined ? String(queryParams.priceMax) : ""
+    queryParams.priceMax !== undefined ? String(queryParams.priceMax) : "",
   );
-  const [attributeSearch, setAttributeSearch] = useState<Record<string, string>>({});
+  const [attributeSearch, setAttributeSearch] = useState<
+    Record<string, string>
+  >({});
 
   useEffect(() => {
     setLocalMinPrice(
-      queryParams.priceMin !== undefined ? String(queryParams.priceMin) : ""
+      queryParams.priceMin !== undefined ? String(queryParams.priceMin) : "",
     );
     setLocalMaxPrice(
-      queryParams.priceMax !== undefined ? String(queryParams.priceMax) : ""
+      queryParams.priceMax !== undefined ? String(queryParams.priceMax) : "",
     );
   }, [queryParams.priceMin, queryParams.priceMax]);
 
@@ -121,7 +123,9 @@ export default function CatalogFilterSidebar({
       <div className="flex items-center justify-between pb-3 border-b border-border">
         <div className="flex items-center gap-2">
           <HugeiconsIcon icon={FilterIcon} size={18} className="text-primary" />
-          <h2 className="font-semibold text-base tracking-tight">Filter Products</h2>
+          <h2 className="font-semibold text-base tracking-tight">
+            Filter Products
+          </h2>
           {activeFiltersCount > 0 && (
             <span className="inline-flex items-center justify-center bg-primary text-primary-foreground text-xs font-bold w-5 h-5 rounded-full">
               {activeFiltersCount}
@@ -140,10 +144,17 @@ export default function CatalogFilterSidebar({
         )}
       </div>
 
-      <Accordion type="multiple" defaultValue={defaultAccordionValues} className="w-full space-y-1">
+      <Accordion
+        type="multiple"
+        defaultValue={defaultAccordionValues}
+        className="w-full space-y-1"
+      >
         {/* Sub-Categories list if available */}
         {subCategories.length > 0 && (
-          <AccordionItem value="subcategories" className="border-b border-border/60 py-1">
+          <AccordionItem
+            value="subcategories"
+            className="border-b border-border/60 py-1"
+          >
             <AccordionTrigger className="py-2.5 text-sm font-semibold hover:no-underline">
               Sub Categories
             </AccordionTrigger>
@@ -155,7 +166,9 @@ export default function CatalogFilterSidebar({
                       href={`/${subCat.slug}`}
                       className="flex items-center justify-between py-1 px-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <span className="truncate font-medium">{subCat.name}</span>
+                      <span className="truncate font-medium">
+                        {subCat.name}
+                      </span>
                       {subCat.productCount !== undefined && (
                         <span className="text-[11px] text-muted-foreground/70 bg-muted/60 px-1.5 py-0.5 rounded-full">
                           {subCat.productCount}
@@ -175,7 +188,10 @@ export default function CatalogFilterSidebar({
             Price Range (৳)
           </AccordionTrigger>
           <AccordionContent className="pt-2 pb-3 space-y-3">
-            <form onSubmit={handlePriceApply} className="flex items-center gap-2">
+            <form
+              onSubmit={handlePriceApply}
+              className="flex items-center gap-2"
+            >
               <Input
                 type="number"
                 placeholder="Min"
@@ -184,7 +200,9 @@ export default function CatalogFilterSidebar({
                 className="h-8 text-xs px-2.5 ring-0!"
                 min={0}
               />
-              <span className="text-muted-foreground text-xs font-semibold">-</span>
+              <span className="text-muted-foreground text-xs font-semibold">
+                -
+              </span>
               <Input
                 type="number"
                 placeholder="Max"
@@ -193,7 +211,11 @@ export default function CatalogFilterSidebar({
                 className="h-8 text-xs px-2.5 ring-0!"
                 min={0}
               />
-              <Button type="submit" size="sm" className="h-8 px-3 text-xs font-semibold shrink-0">
+              <Button
+                type="submit"
+                size="sm"
+                className="h-8 px-3 text-xs font-semibold shrink-0"
+              >
                 Apply
               </Button>
             </form>
@@ -201,7 +223,10 @@ export default function CatalogFilterSidebar({
         </AccordionItem>
 
         {/* Availability Filter */}
-        <AccordionItem value="availability" className="border-b border-border/60 py-1">
+        <AccordionItem
+          value="availability"
+          className="border-b border-border/60 py-1"
+        >
           <AccordionTrigger className="py-2.5 text-sm font-semibold hover:no-underline">
             Availability
           </AccordionTrigger>
@@ -222,11 +247,19 @@ export default function CatalogFilterSidebar({
                           : "border-muted-foreground/40 group-hover:border-primary"
                       }`}
                     >
-                      {isChecked && <HugeiconsIcon icon={Tick02Icon} size={12} strokeWidth={3} />}
+                      {isChecked && (
+                        <HugeiconsIcon
+                          icon={Tick02Icon}
+                          size={12}
+                          strokeWidth={3}
+                        />
+                      )}
                     </div>
                     <span
                       className={`font-medium transition-colors ${
-                        isChecked ? "text-foreground font-semibold" : "text-muted-foreground group-hover:text-foreground"
+                        isChecked
+                          ? "text-foreground font-semibold"
+                          : "text-muted-foreground group-hover:text-foreground"
                       }`}
                     >
                       {opt.label}
@@ -240,13 +273,15 @@ export default function CatalogFilterSidebar({
 
         {/* Dynamic Specification Facets */}
         {facets.map((facetGroup) => {
-          const searchQuery = (attributeSearch[facetGroup.attributeCode] || "").toLowerCase();
+          const searchQuery = (
+            attributeSearch[facetGroup.attributeCode] || ""
+          ).toLowerCase();
           const filteredOptions = facetGroup.options.filter((opt) =>
-            opt.label.toLowerCase().includes(searchQuery)
+            opt.label.toLowerCase().includes(searchQuery),
           );
 
           const hasSelectedOption = facetGroup.options.some((opt) =>
-            selectedFilterOptionIds.includes(opt.id)
+            selectedFilterOptionIds.includes(opt.id),
           );
 
           return (
@@ -289,16 +324,22 @@ export default function CatalogFilterSidebar({
 
                 <div className="space-y-1.5 max-h-52 overflow-y-auto scrollbar-thin pr-1">
                   {filteredOptions.length === 0 ? (
-                    <p className="text-[11px] text-muted-foreground py-1">No options match</p>
+                    <p className="text-[11px] text-muted-foreground py-1">
+                      No options match
+                    </p>
                   ) : (
                     filteredOptions.map((opt) => {
-                      const isChecked = selectedFilterOptionIds.includes(opt.id);
+                      const isChecked = selectedFilterOptionIds.includes(
+                        opt.id,
+                      );
                       const isDisabled = opt.count === 0 && !isChecked;
 
                       return (
                         <label
                           key={opt.id}
-                          onClick={() => !isDisabled && handleOptionToggle(opt.id)}
+                          onClick={() =>
+                            !isDisabled && handleOptionToggle(opt.id)
+                          }
                           className={`flex items-center justify-between py-1 select-none text-xs ${
                             isDisabled
                               ? "opacity-40 cursor-not-allowed"
@@ -314,7 +355,11 @@ export default function CatalogFilterSidebar({
                               }`}
                             >
                               {isChecked && (
-                                <HugeiconsIcon icon={Tick02Icon} size={12} strokeWidth={3} />
+                                <HugeiconsIcon
+                                  icon={Tick02Icon}
+                                  size={12}
+                                  strokeWidth={3}
+                                />
                               )}
                             </div>
                             <span

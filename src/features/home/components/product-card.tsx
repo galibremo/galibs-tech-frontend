@@ -102,7 +102,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             size="icon"
             variant="outline"
             onClick={handleAddToCart}
-            className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary! hover:text-primary-foreground! transition-colors"
             title="Add to Cart"
           >
             <HugeiconsIcon icon={ShoppingCart02Icon} className="w-4 h-4" />
