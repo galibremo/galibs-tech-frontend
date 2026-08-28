@@ -7,6 +7,7 @@ import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ShoppingCart02Icon } from "@hugeicons/core-free-icons";
+import { route } from "@/routes/routes";
 
 interface ProductCardProps {
   product: FeaturedProduct | ProductItem;
@@ -49,7 +50,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Link
-      href={`/product/${product.slug}`}
+      href={route.public.productDetails(product.slug)}
       className="group relative flex flex-col justify-between h-full bg-background border border-border rounded-lg overflow-hidden shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200"
     >
       {/* Top Badge: Savings */}

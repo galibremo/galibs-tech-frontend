@@ -56,32 +56,32 @@ export default function HomeFooter() {
               <h4 className="text-sm font-semibold tracking-wider uppercase">Shop Categories</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="/category/laptops-computers" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/laptops-computers" className="text-muted-foreground hover:text-foreground transition-colors">
                     Laptops & Desktops
                   </Link>
                 </li>
                 <li>
-                  <Link href="/category/smartphones-tablets" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/smartphones-tablets" className="text-muted-foreground hover:text-foreground transition-colors">
                     Smartphones & Tablets
                   </Link>
                 </li>
                 <li>
-                  <Link href="/category/pc-components" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/pc-components" className="text-muted-foreground hover:text-foreground transition-colors">
                     PC Components & Hardware
                   </Link>
                 </li>
                 <li>
-                  <Link href="/category/audio-wearables" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/audio-wearables" className="text-muted-foreground hover:text-foreground transition-colors">
                     Audio & Wearables
                   </Link>
                 </li>
                 <li>
-                  <Link href="/category/gaming-gear" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/gaming-gear" className="text-muted-foreground hover:text-foreground transition-colors">
                     Gaming Gear & Accessories
                   </Link>
                 </li>
                 <li>
-                  <Link href="/category/networking" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link href="/networking" className="text-muted-foreground hover:text-foreground transition-colors">
                     Networking & Storage
                   </Link>
                 </li>

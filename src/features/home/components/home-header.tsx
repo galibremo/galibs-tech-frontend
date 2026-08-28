@@ -139,7 +139,7 @@ export default function HomeHeader() {
                                 {category.children.map((child) => (
                                   <li key={child.id} className="py-0.5">
                                     <Link
-                                      href={`/category/${child.slug}`}
+                                      href={`/${child.slug}`}
                                       className="text-sm text-muted-foreground no-underline! hover:text-foreground"
                                     >
                                       {child.name}
@@ -155,7 +155,7 @@ export default function HomeHeader() {
                             className="not-last:border-b flex px-4"
                           >
                             <Link
-                              href={`/category/${category.slug}`}
+                              href={`/${category.slug}`}
                               className="flex flex-1 items-start justify-between py-2 text-left text-sm font-medium"
                             >
                               {category.name}
@@ -248,7 +248,7 @@ export default function HomeHeader() {
                               <ListItem
                                 key={child.id}
                                 title={child.name}
-                                href={`/category/${child.slug}`}
+                                href={`/${child.slug}`}
                                 className="p-0"
                               />
                             ))}
@@ -258,7 +258,7 @@ export default function HomeHeader() {
                     ) : (
                       <NavigationMenuLink
                         className={cn(navigationMenuTriggerStyle(), "h-7")}
-                        href={`/category/${category.slug}`}
+                        href={`/${category.slug}`}
                       >
                         {category.name}
                       </NavigationMenuLink>

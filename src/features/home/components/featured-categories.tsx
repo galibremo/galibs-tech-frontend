@@ -72,7 +72,7 @@ export default function FeaturedCategories() {
           {categoriesList.map((category) => (
             <Link
               key={category.id || category.slug}
-              href={`/category/${category.slug}`}
+              href={`/${category.slug}`}
               className="group flex flex-col items-center justify-center p-3 sm:p-4 rounded-lg bg-background border border-border shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200 text-center h-full aspect-square"
             >
               <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-muted-foreground transition-colors">

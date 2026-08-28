@@ -2,6 +2,7 @@ export const route = {
   public: {
     home: "/",
     cart: "/cart",
+    catalog: (slug: string) => `/${slug}`,
     productDetails: (slug: string) => `/product/${slug}`,
   },
   private: {
@@ -56,6 +57,9 @@ export const apiRoute = {
   emailLogResend: (logId: string) => `/email-logs/${logId}/resend`,
   categories: "/categories",
   categoriesTree: "/categories/tree",
+  categoryBySlug: (slug: string) => `/categories/slug/${slug}`,
+  categoryFilters: (slug: string) => `/categories/${slug}/filters`,
+  categoryProducts: (slug: string) => `/categories/${slug}/products`,
 
   brands: "/brands",
   brand: (id: string) => `/brands/${id}`,

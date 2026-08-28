@@ -1,10 +1,13 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ChevronRightIcon, Home01Icon, AlertCircleIcon } from "@hugeicons/core-free-icons";
+import {
+  ChevronRightIcon,
+  Home01Icon,
+  AlertCircleIcon,
+} from "@hugeicons/core-free-icons";
 
 import { Container } from "@/components/custom-ui/container";
 import { Button } from "@/components/ui/button";
@@ -23,7 +26,9 @@ interface ProductDetailsProps {
   slug?: string;
 }
 
-export default function ProductDetails({ slug: propsSlug }: ProductDetailsProps) {
+export default function ProductDetails({
+  slug: propsSlug,
+}: ProductDetailsProps) {
   const params = useParams();
   const slug = propsSlug || (params.slug as string) || "";
 
@@ -54,11 +59,15 @@ export default function ProductDetails({ slug: propsSlug }: ProductDetailsProps)
     return (
       <Container className="p-6 text-center py-20 min-h-[60vh] flex flex-col items-center justify-center">
         <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-          <HugeiconsIcon icon={AlertCircleIcon} className="w-8 h-8 text-muted-foreground" />
+          <HugeiconsIcon
+            icon={AlertCircleIcon}
+            className="w-8 h-8 text-muted-foreground"
+          />
         </div>
         <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
         <p className="text-muted-foreground mb-6 max-w-md">
-          We couldn&apos;t find the product you are looking for. It may have been removed or the link is invalid.
+          We couldn&apos;t find the product you are looking for. It may have
+          been removed or the link is invalid.
         </p>
         <Button asChild>
           <Link href="/">Back to Home</Link>
@@ -88,7 +97,7 @@ export default function ProductDetails({ slug: propsSlug }: ProductDetailsProps)
           />
           {product.primaryCategory ? (
             <Link
-              href={`/category/${product.primaryCategory.slug}`}
+              href={`/${product.primaryCategory.slug}`}
               className="hover:text-foreground transition-colors"
             >
               {product.primaryCategory.name}
