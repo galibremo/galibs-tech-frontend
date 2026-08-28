@@ -74,6 +74,7 @@ export default function HomeHeader() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [showMobileSearch, setShowMobileSearch] = React.useState(false);
+  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const { data: categoriesTree } = useCategoriesTreeQuery();
   const { user } = useAuth();
 
@@ -104,12 +105,13 @@ export default function HomeHeader() {
         <Container>
           <div className="flex items-center justify-between gap-3 px-3 sm:px-4.5 lg:px-6 py-3">
             <div className="flex lg:hidden items-center gap-1.5 lg:gap-3">
-              <Sheet>
+              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetTrigger asChild>
                   <Button
                     variant="outline"
                     size="icon"
                     className="lg:hidden shrink-0 cursor-pointer"
+                    aria-label="Open categories menu"
                   >
                     <HugeiconsIcon
                       icon={Menu01Icon}
@@ -118,51 +120,83 @@ export default function HomeHeader() {
                     />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-75 sm:w-100 gap-0">
-                  <SheetHeader>
-                    <SheetTitle className="text-left">Categories</SheetTitle>
+                <SheetContent
+                  side="left"
+                  className="w-[85vw] max-w-80 sm:max-w-90 p-0 flex flex-col h-full bg-background border-r border-border gap-0"
+                >
+                  {/* Header */}
+                  <SheetHeader className="p-3 border-b border-border text-left">
+                    <div className="flex items-center gap-2">
+                      <SheetTitle className="font-semibold text-base tracking-tight">
+                        Categories
+                      </SheetTitle>
+                    </div>
                   </SheetHeader>
-                  <div className="flex flex-col h-full overflow-y-auto">
-                    <Accordion type="multiple" className="w-full">
-                      {categoriesTree?.map((category) =>
-                        category.children && category.children.length > 0 ? (
-                          <AccordionItem
-                            key={category.id}
-                            value={category.id}
-                            className="px-4"
-                          >
-                            <AccordionTrigger className="text-sm font-medium py-2">
-                              {category.name}
-                            </AccordionTrigger>
-                            <AccordionContent className="[&_a]:no-underline">
-                              <ul className="flex flex-col gap-2 pl-3">
-                                {category.children.map((child) => (
-                                  <li key={child.id} className="py-0.5">
+
+                  {/* Categories Navigation List */}
+                  <div className="flex-1 overflow-y-auto p-3 scrollbar-thin">
+                    <Accordion type="multiple" className="w-full space-y-1">
+                      {categoriesTree?.map((category) => {
+                        const hasChildren =
+                          category.children && category.children.length > 0;
+
+                        if (hasChildren) {
+                          return (
+                            <AccordionItem
+                              key={category.id}
+                              value={category.id}
+                              className="border-b border-border/60"
+                            >
+                              <AccordionTrigger className="py-2.5 text-sm font-semibold hover:no-underline">
+                                <span className="truncate">
+                                  {category.name}
+                                </span>
+                              </AccordionTrigger>
+                              <AccordionContent className="pt-1 pb-3">
+                                <ul className="space-y-1.5 text-xs font-medium">
+                                  <li>
                                     <Link
-                                      href={`/${child.slug}`}
-                                      className="text-sm text-muted-foreground no-underline! hover:text-foreground"
+                                      href={`/${category.slug}`}
+                                      onClick={() => setIsSheetOpen(false)}
+                                      className="flex items-center justify-between py-1 px-2 rounded-md hover:bg-muted text-primary font-semibold transition-colors"
                                     >
-                                      {child.name}
+                                      <span>All {category.name}</span>
                                     </Link>
                                   </li>
-                                ))}
-                              </ul>
-                            </AccordionContent>
-                          </AccordionItem>
-                        ) : (
+                                  {category.children!.map((child) => (
+                                    <li key={child.id}>
+                                      <Link
+                                        href={`/${child.slug}`}
+                                        onClick={() => setIsSheetOpen(false)}
+                                        className="flex items-center justify-between py-1 px-2 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                      >
+                                        <span className="truncate">
+                                          {child.name}
+                                        </span>
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </AccordionContent>
+                            </AccordionItem>
+                          );
+                        }
+
+                        return (
                           <div
                             key={category.id}
-                            className="not-last:border-b flex px-4"
+                            className="border-b border-border/60"
                           >
                             <Link
                               href={`/${category.slug}`}
-                              className="flex flex-1 items-start justify-between py-2 text-left text-sm font-medium"
+                              onClick={() => setIsSheetOpen(false)}
+                              className="flex items-center justify-between py-2.5 text-sm font-semibold text-foreground hover:text-primary transition-colors"
                             >
-                              {category.name}
+                              <span className="truncate">{category.name}</span>
                             </Link>
                           </div>
-                        ),
-                      )}
+                        );
+                      })}
                     </Accordion>
                   </div>
                 </SheetContent>
