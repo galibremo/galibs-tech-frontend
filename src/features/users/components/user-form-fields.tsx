@@ -54,6 +54,7 @@ export function UserFormFields({
                 {...field}
                 placeholder="Full name"
                 disabled={disabled}
+                className="ring-0!"
               />
               <FieldError>{fieldState.error?.message}</FieldError>
             </Field>
@@ -71,6 +72,7 @@ export function UserFormFields({
                 {...field}
                 placeholder="you@example.com"
                 disabled={disabled}
+                className="ring-0!"
               />
               <FieldError>{fieldState.error?.message}</FieldError>
             </Field>

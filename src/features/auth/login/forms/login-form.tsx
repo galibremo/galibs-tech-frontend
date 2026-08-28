@@ -181,7 +181,7 @@ export function LoginForm({ loginMode }: { loginMode: LoginMode }) {
                       {...field}
                       placeholder="you@example.com"
                       autoComplete="email"
-                      className="h-12 rounded-xl pl-10"
+                      className="h-12 rounded-xl pl-10 ring-0!"
                       disabled={isLoggingInWithPassword}
                     />
                   </div>
@@ -269,7 +269,7 @@ export function LoginForm({ loginMode }: { loginMode: LoginMode }) {
                       {...field}
                       placeholder="you@example.com"
                       autoComplete="email"
-                      className="h-12 rounded-xl pl-10"
+                      className="h-12 rounded-xl pl-10 ring-0!"
                       disabled={isRequestingMagicLink}
                     />
                   </div>

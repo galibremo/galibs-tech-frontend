@@ -163,7 +163,7 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
 
       {/* Pricing Section */}
       <div className="flex items-baseline flex-wrap gap-3 p-3.5 rounded-lg bg-card border border-border/60">
-        <span className="text-2xl sm:text-3xl font-extrabold text-red-600 dark:text-red-500">
+        <span className="text-2xl sm:text-3xl font-extrabold text-secondary-foreground dark:text-primary-foreground">
           {product.price.toLocaleString()}৳
         </span>
 

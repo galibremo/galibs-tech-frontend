@@ -75,7 +75,7 @@ export function RegisterForm() {
                   {...field}
                   placeholder="John Doe"
                   autoComplete="name"
-                  className="h-12 rounded-xl pl-10"
+                  className="h-12 rounded-xl pl-10 ring-0!"
                   disabled={isPending}
                 />
               </div>
@@ -103,7 +103,7 @@ export function RegisterForm() {
                   {...field}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className="h-12 rounded-xl pl-10"
+                  className="h-12 rounded-xl pl-10 ring-0!"
                   disabled={isPending}
                 />
               </div>

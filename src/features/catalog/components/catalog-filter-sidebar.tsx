@@ -181,7 +181,7 @@ export default function CatalogFilterSidebar({
                 placeholder="Min"
                 value={localMinPrice}
                 onChange={(e) => setLocalMinPrice(e.target.value)}
-                className="h-8 text-xs px-2.5"
+                className="h-8 text-xs px-2.5 ring-0!"
                 min={0}
               />
               <span className="text-muted-foreground text-xs font-semibold">-</span>
@@ -190,7 +190,7 @@ export default function CatalogFilterSidebar({
                 placeholder="Max"
                 value={localMaxPrice}
                 onChange={(e) => setLocalMaxPrice(e.target.value)}
-                className="h-8 text-xs px-2.5"
+                className="h-8 text-xs px-2.5 ring-0!"
                 min={0}
               />
               <Button type="submit" size="sm" className="h-8 px-3 text-xs font-semibold shrink-0">
@@ -282,7 +282,7 @@ export default function CatalogFilterSidebar({
                           [facetGroup.attributeCode]: e.target.value,
                         }))
                       }
-                      className="h-7 text-[11px] pl-8 pr-2"
+                      className="h-7 text-[11px] pl-8 pr-2 ring-0!"
                     />
                   </div>
                 )}

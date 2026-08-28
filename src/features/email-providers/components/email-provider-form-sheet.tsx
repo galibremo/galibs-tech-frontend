@@ -1860,6 +1860,7 @@ function ControlledInputField({
                 }
                 placeholder={placeholder}
                 disabled={disabled}
+                className="ring-0!"
               />
             )}
             <FieldError>{fieldState.error?.message}</FieldError>

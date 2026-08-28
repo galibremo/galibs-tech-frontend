@@ -56,7 +56,7 @@ export function ProductImageGallery({
 
       {/* Small Thumbnails Selector */}
       {galleryList.length > 1 && (
-        <div className="flex items-center justify-center gap-2.5 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex items-center justify-center gap-2.5 overflow-x-auto py-2 scrollbar-none">
           {galleryList.map((url, idx) => {
             const isSelected = idx === selectedIndex;
             return (
@@ -67,7 +67,7 @@ export function ProductImageGallery({
                 className={cn(
                   "relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 overflow-hidden shrink-0 bg-background transition-all cursor-pointer",
                   isSelected
-                    ? "border-primary shadow-xs ring-2 ring-primary/20 scale-102"
+                    ? "border-primary shadow-xs scale-102"
                     : "border-border/60 hover:border-primary/50 opacity-80 hover:opacity-100",
                 )}
                 aria-label={`Select product view ${idx + 1}`}

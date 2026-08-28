@@ -12,8 +12,12 @@ export function ProductSpecificationsTable({
   specifications = [],
   fallbackSpecs = [],
 }: ProductSpecificationsTableProps) {
-  const groupsToDisplay =
-    specifications.length > 0 ? specifications : fallbackSpecs;
+  const rawGroups =
+    specifications && specifications.length > 0 ? specifications : fallbackSpecs;
+
+  const groupsToDisplay = (rawGroups || []).filter(
+    (group) => group && Array.isArray(group.fields) && group.fields.length > 0
+  );
 
   return (
     <div id="specification" className="flex flex-col gap-3 w-full">
@@ -41,7 +45,7 @@ export function ProductSpecificationsTable({
 
               {/* Group Rows Table */}
               <div className="divide-y divide-border/60">
-                {group.fields.map((field, idx) => (
+                {group.fields?.map((field, idx) => (
                   <div
                     key={field.id || `${field.name}-${idx}`}
                     className="grid grid-cols-1 sm:grid-cols-3 p-3 text-xs sm:text-sm hover:bg-muted/30 transition-colors gap-1 sm:gap-4"

@@ -81,24 +81,29 @@ export default function HeroSection() {
             <CarouselDots />
           </Carousel>
           <div className="flex flex-row lg:flex-col items-center gap-3 sm:gap-4.5 lg:gap-6 w-full lg:w-[25%]">
-            {offerSEctionData?.slice(0, 2).map((offer, index) => (
-              <div
-                className="relative rounded-lg aspect-4/3 lg:aspect-auto lg:h-full w-full"
-                key={index}
-              >
-                <Image
-                  src={
-                    offer.bannerImageUrl ||
-                    (index === 0 ? "/offers-1.webp" : "/offers-2.webp")
-                  }
-                  alt={offer.name || "hero slide image"}
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 25vw"
-                  priority
-                  className="rounded-lg object-cover"
-                />
-              </div>
-            ))}
+            {[0, 1].map((index) => {
+              const offer = offerSEctionData?.[index];
+              const imageUrl =
+                offer?.bannerImageUrl ||
+                (index === 0 ? "/offers-1.webp" : "/offers-2.webp");
+              const altText = offer?.name || `Hero offer banner ${index + 1}`;
+
+              return (
+                <div
+                  className="relative rounded-lg aspect-4/3 lg:aspect-auto w-full md:w-1/2 lg:w-full lg:h-full overflow-hidden"
+                  key={index}
+                >
+                  <Image
+                    src={imageUrl}
+                    alt={altText}
+                    fill
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    priority
+                    className="rounded-lg object-cover"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </Container>

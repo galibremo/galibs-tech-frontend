@@ -226,7 +226,7 @@ function TemplateInputField({ name, id, label, disabled, placeholder }: Template
 						placeholder={placeholder}
 						disabled={disabled}
 						aria-invalid={!!fieldState.error}
-						className="h-10 rounded-xl"
+						className="h-10 rounded-xl ring-0!"
 					/>
 					<FieldError>{fieldState.error?.message}</FieldError>
 				</Field>

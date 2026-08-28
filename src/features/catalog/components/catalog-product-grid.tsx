@@ -136,7 +136,7 @@ export default function CatalogProductGrid({
           <Link
             key={product.id}
             href={route.public.productDetails(product.slug)}
-            className="group relative flex flex-col justify-between h-full bg-background border border-border/80 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all duration-200"
+            className="group relative flex flex-col justify-between h-full bg-background border border-border rounded-lg overflow-hidden shadow-xs hover:shadow-md dark:hover:shadow-[0_8px_14px_-6px_rgba(255,255,255,0.08)] transition-all duration-200"
           >
             {/* Top Bar: Stock status & Save tag */}
             <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-center justify-between gap-1 pointer-events-none">
@@ -146,39 +146,39 @@ export default function CatalogProductGrid({
                 {stockConfig.label}
               </span>
               {saveAmount && (
-                <span className="bg-rose-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
-                  Save ৳{saveAmount.toLocaleString()}
+                <span className="bg-[#6F11B6] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs">
+                  Save: {saveAmount.toLocaleString()}৳
                 </span>
               )}
             </div>
 
             {/* Thumbnail */}
-            <div className="relative w-full aspect-4/3 flex items-center justify-center overflow-hidden bg-muted/20 pt-6">
+            <div className="relative w-full aspect-4/3 flex items-center justify-center overflow-hidden">
               {product.thumbnailUrl ? (
                 <Image
                   src={product.thumbnailUrl}
                   alt={product.name}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
-                  className="object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-300 group-hover:scale-104"
                 />
               ) : (
-                <div className="w-full h-full bg-muted/30 flex items-center justify-center text-xs text-muted-foreground">
-                  No Image Available
+                <div className="w-full h-full bg-muted/40 rounded-lg flex items-center justify-center text-xs text-muted-foreground">
+                  No Image
                 </div>
               )}
             </div>
 
-            {/* Content */}
-            <div className="p-3.5 flex flex-col flex-1 justify-between border-t border-border/30 gap-3">
+            {/* Details Container */}
+            <div className="p-3 flex flex-col flex-1 justify-between border-t border-border/30">
               <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-foreground line-clamp-2 leading-snug group-hover:text-primary transition-colors">
+                <h3 className="text-xs sm:text-sm font-medium text-foreground transition-colors line-clamp-2 leading-snug mb-2">
                   {product.name}
                 </h3>
 
                 {/* Key features bullets */}
                 {product.keyFeatures && product.keyFeatures.length > 0 && (
-                  <ul className="mt-2 space-y-1 text-[11px] text-muted-foreground/90">
+                  <ul className="mt-1.5 space-y-1 text-[11px] text-muted-foreground/90">
                     {product.keyFeatures.slice(0, 3).map((feat, idx) => (
                       <li
                         key={idx}
@@ -193,14 +193,14 @@ export default function CatalogProductGrid({
               </div>
 
               {/* Price & Action */}
-              <div className="flex items-center justify-between gap-1 pt-2 border-t border-border/20">
-                <div className="flex flex-col">
-                  <span className="text-sm sm:text-base font-bold text-red-600 dark:text-red-500">
-                    ৳{product.price.toLocaleString()}
+              <div className="flex items-center justify-between gap-1 mt-auto pt-2">
+                <div className="flex items-baseline flex-wrap gap-1">
+                  <span className="text-sm sm:text-base font-bold text-secondary-foreground dark:text-primary-foreground">
+                    {product.price.toLocaleString()}৳
                   </span>
                   {hasRegularPrice && (
-                    <span className="text-[11px] text-muted-foreground line-through">
-                      ৳{product.regularPrice?.toLocaleString()}
+                    <span className="text-xs text-muted-foreground line-through font-normal">
+                      {product.regularPrice?.toLocaleString()}৳
                     </span>
                   )}
                 </div>

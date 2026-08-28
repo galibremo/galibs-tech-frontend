@@ -3,7 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Home01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { Home01Icon } from "@hugeicons/core-free-icons";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import type { CategoryTreeItem } from "../types/catalog.types";
 
 interface CatalogBreadcrumbProps {
@@ -58,42 +66,47 @@ export default function CatalogBreadcrumb({
   }, [categoryTree, currentSlug, currentCategoryName]);
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-muted-foreground overflow-x-auto py-2.5 scrollbar-none"
-    >
-      <Link
-        href="/"
-        className="flex items-center gap-1 hover:text-foreground transition-colors shrink-0 font-medium"
-      >
-        <HugeiconsIcon icon={Home01Icon} size={14} className="text-muted-foreground/80" />
-        <span>Home</span>
-      </Link>
+    <Breadcrumb className="py-2.5">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link href="/" className="flex items-center gap-1 font-medium">
+              <HugeiconsIcon
+                icon={Home01Icon}
+                size={14}
+                className="text-muted-foreground/80"
+              />
+              <span>Home</span>
+            </Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
 
-      {breadcrumbNodes.map((node, idx) => {
-        const isLast = idx === breadcrumbNodes.length - 1;
-        return (
-          <React.Fragment key={node.slug}>
-            <HugeiconsIcon
-              icon={ArrowRight01Icon}
-              size={12}
-              className="shrink-0 text-muted-foreground/40"
-            />
-            {isLast ? (
-              <span className="font-semibold text-foreground truncate max-w-[200px] capitalize">
-                {node.name}
-              </span>
-            ) : (
-              <Link
-                href={`/${node.slug}`}
-                className="hover:text-foreground transition-colors shrink-0 font-medium capitalize"
-              >
-                {node.name}
-              </Link>
-            )}
-          </React.Fragment>
-        );
-      })}
-    </nav>
+        {breadcrumbNodes.map((node, idx) => {
+          const isLast = idx === breadcrumbNodes.length - 1;
+          return (
+            <React.Fragment key={node.slug}>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage className="font-semibold text-foreground truncate max-w-[200px] capitalize">
+                    {node.name}
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={`/${node.slug}`}
+                      className="font-medium capitalize"
+                    >
+                      {node.name}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </React.Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
+

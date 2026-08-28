@@ -275,7 +275,7 @@ export function ProfileUpdateForm({
                         {...field}
                         placeholder="e.g. Jane Doe"
                         disabled={isSaving}
-                        className="rounded-xl bg-background shadow-sm transition-shadow focus-visible:ring-primary/20 focus-visible:ring-offset-0"
+                        className="rounded-xl bg-background shadow-sm transition-shadow focus-visible:ring-primary/20 focus-visible:ring-offset-0 ring-0!"
                       />
                       <FieldError>{fieldState.error?.message}</FieldError>
                     </Field>
@@ -294,7 +294,7 @@ export function ProfileUpdateForm({
                     value={user.email}
                     disabled
                     readOnly
-                    className="cursor-not-allowed rounded-xl bg-muted/50 opacity-70 shadow-inner"
+                    className="cursor-not-allowed rounded-xl bg-muted/50 opacity-70 shadow-inner ring-0!"
                   />
                   <FieldDescription className="text-xs">
                     Your email address is managed by your authentication

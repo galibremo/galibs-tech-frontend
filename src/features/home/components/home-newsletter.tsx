@@ -48,7 +48,7 @@ export default function HomeNewsletter() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="pl-9 bg-background"
+                    className="pl-9 bg-background ring-0!"
                   />
                 </div>
                 <Button type="submit" className="shrink-0 cursor-pointer">

@@ -145,7 +145,7 @@ export function CartSheet() {
 
                     {/* Pricing & Quantity Controls */}
                     <div className="flex items-center justify-between mt-2 pt-1 border-t border-border/20">
-                      <div className="text-xs font-bold text-red-600 dark:text-red-500">
+                      <div className="text-xs font-bold text-secondary-foreground dark:text-primary-foreground">
                         {(item.price * item.quantity).toLocaleString()}৳
                         {item.quantity > 1 && (
                           <span className="text-[10px] text-muted-foreground font-normal ml-1">
@@ -189,7 +189,7 @@ export function CartSheet() {
               <div className="space-y-1.5 w-full text-xs">
                 <div className="flex justify-between items-center text-sm font-semibold">
                   <span>Subtotal</span>
-                  <span className="text-red-600 dark:text-red-500">
+                  <span className="text-secondary-foreground dark:text-primary-foreground">
                     {subtotal.toLocaleString()}৳
                   </span>
                 </div>

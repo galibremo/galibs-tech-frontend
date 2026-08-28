@@ -88,7 +88,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <div className="flex items-center justify-between gap-1 mt-auto pt-1">
           <div className="flex items-baseline flex-wrap gap-1">
-            <span className="text-sm sm:text-base font-bold text-red-600 dark:text-red-500">
+            <span className="text-sm sm:text-base font-bold text-secondary-foreground dark:text-primary-foreground">
               {product.price.toLocaleString()}৳
             </span>
             {hasRegularPrice && (

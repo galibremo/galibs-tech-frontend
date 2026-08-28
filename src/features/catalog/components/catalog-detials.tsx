@@ -15,6 +15,12 @@ import CatalogToolbar from "./catalog-toolbar";
 import CatalogActiveFilters from "./catalog-active-filters";
 import CatalogProductGrid from "./catalog-product-grid";
 import CatalogPagination from "./catalog-pagination";
+import {
+  decodeAvailability,
+  decodeFilterOptions,
+  encodeAvailability,
+  encodeFilterOptions,
+} from "../utils/catalog-url-helpers";
 import type {
   CatalogQueryParams,
   StockStatus,
@@ -32,6 +38,15 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  // React Queries
+  const { data: filtersData, isLoading: isFiltersLoading } =
+    useCategoryFiltersQuery(slug);
+
+  const { data: categoryDetail } = useCategoryBySlugQuery(slug);
+  const { data: categoryTree } = useCatalogCategoryTreeQuery();
+
+  const facets = filtersData?.facets || [];
+
   // Parse query parameters from URL
   const queryParams = React.useMemo<CatalogQueryParams>(() => {
     const priceMinRaw = searchParams.get("priceMin");
@@ -45,15 +60,13 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     const priceMin = priceMinRaw ? parseInt(priceMinRaw, 10) : undefined;
     const priceMax = priceMaxRaw ? parseInt(priceMaxRaw, 10) : undefined;
 
-    const availability = availabilityRaw
-      ? (availabilityRaw.split(",").filter(Boolean) as StockStatus[])
-      : [];
+    const availability = decodeAvailability(availabilityRaw);
 
     const sort = (sortRaw as CatalogSort) || "default";
     const page = pageRaw ? parseInt(pageRaw, 10) : 1;
     const limit = limitRaw ? parseInt(limitRaw, 10) : 20;
 
-    const filter = filterRaw ? filterRaw.split(",").filter(Boolean) : [];
+    const filter = decodeFilterOptions(filterRaw, facets);
 
     return {
       priceMin: priceMin && !isNaN(priceMin) ? priceMin : undefined,
@@ -64,24 +77,19 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
       limit: limit && !isNaN(limit) ? limit : 20,
       filter,
     };
-  }, [searchParams]);
-
-  // React Queries
-  const { data: filtersData, isLoading: isFiltersLoading } =
-    useCategoryFiltersQuery(slug);
+  }, [searchParams, facets]);
 
   const { data: productsData, isLoading: isProductsLoading } =
     useCategoryProductsQuery(slug, queryParams);
-
-  const { data: categoryDetail } = useCategoryBySlugQuery(slug);
-
-  const { data: categoryTree } = useCatalogCategoryTreeQuery();
 
   // Find sub-categories of current category in categoryTree
   const subCategories = React.useMemo<CategoryTreeItem[]>(() => {
     if (!categoryTree || categoryTree.length === 0) return [];
 
-    function findChildren(items: CategoryTreeItem[], targetSlug: string): CategoryTreeItem[] | null {
+    function findChildren(
+      items: CategoryTreeItem[],
+      targetSlug: string,
+    ): CategoryTreeItem[] | null {
       for (const item of items) {
         if (item.slug === targetSlug) {
           return item.children || [];
@@ -97,8 +105,7 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     return findChildren(categoryTree, slug) || [];
   }, [categoryTree, slug]);
 
-  // Combine facets from productsData or filtersData
-  const facets = productsData?.facets || filtersData?.facets || [];
+  const displayFacets = productsData?.facets || facets;
   const products = productsData?.items || [];
   const totalProducts = productsData?.total || 0;
   const currentPage = productsData?.page || queryParams.page || 1;
@@ -123,7 +130,12 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     }
 
     if (merged.availability && merged.availability.length > 0) {
-      params.set("availability", merged.availability.join(","));
+      const encoded = encodeAvailability(merged.availability);
+      if (encoded) {
+        params.set("availability", encoded);
+      } else {
+        params.delete("availability");
+      }
     } else {
       params.delete("availability");
     }
@@ -147,12 +159,17 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     }
 
     if (merged.filter && merged.filter.length > 0) {
-      params.set("filter", merged.filter.join(","));
+      const encoded = encodeFilterOptions(merged.filter);
+      if (encoded) {
+        params.set("filter", encoded);
+      } else {
+        params.delete("filter");
+      }
     } else {
       params.delete("filter");
     }
 
-    const queryString = params.toString();
+    const queryString = params.toString().replace(/%2C/gi, ",");
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
     startTransition(() => {
@@ -172,8 +189,8 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   return (
-    <div className="min-h-screen bg-muted/20 py-4 sm:py-6">
-      <Container className="space-y-4">
+    <div className="bg-background min-h-screen pb-16">
+      <Container className="space-y-6 p-3 sm:p-4.5 lg:p-6 xl:py-8">
         {/* Breadcrumb Navigation */}
         <CatalogBreadcrumb
           currentSlug={slug}
@@ -186,7 +203,7 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
           {/* Left Sticky Sidebar (Desktop Filter) */}
           <aside className="hidden lg:block lg:col-span-1 sticky top-20">
             <CatalogFilterSidebar
-              facets={facets}
+              facets={displayFacets}
               queryParams={queryParams}
               onFilterChange={handleFilterChange}
               onResetFilters={handleResetFilters}
@@ -202,19 +219,19 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
               categoryTitle={categoryTitle}
               totalProducts={totalProducts}
               queryParams={queryParams}
-              facets={facets}
+              facets={displayFacets}
               subCategories={subCategories}
               onFilterChange={handleFilterChange}
               onResetFilters={handleResetFilters}
             />
 
-            {/* Active Filters Chips */}
+            {/* Active Filters Chips
             <CatalogActiveFilters
               queryParams={queryParams}
-              facets={facets}
+              facets={displayFacets}
               onFilterChange={handleFilterChange}
               onResetFilters={handleResetFilters}
-            />
+            /> */}
 
             {/* Product Grid */}
             <CatalogProductGrid
