@@ -21,17 +21,19 @@ export interface CategorySummary {
 }
 
 export interface SpecField {
-  id: string;
+  id?: string;
   name: string;
   value: string;
   sortOrder?: number;
 }
 
 export interface SpecGroup {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
+  group?: string;
   sortOrder?: number;
-  fields: SpecField[];
+  fields?: SpecField[];
+  items?: SpecField[];
 }
 
 export interface ProductDetails {

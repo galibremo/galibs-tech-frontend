@@ -3,7 +3,7 @@ export const route = {
     home: "/",
     cart: "/cart",
     catalog: (slug: string) => `/${slug}`,
-    productDetails: (slug: string) => `/product/${slug}`,
+    productDetails: (slug: string) => `/${slug}`,
   },
   private: {
     dashboard: "/dashboard",

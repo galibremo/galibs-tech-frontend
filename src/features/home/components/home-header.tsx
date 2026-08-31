@@ -46,12 +46,12 @@ import { CartSheet } from "@/components/common/cart/cart-sheet";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
-  React.ComponentPropsWithoutRef<"a">
+  React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, title, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
-        <a
+        <Link
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-accent-foreground focus:bg-muted focus:text-accent-foreground",
@@ -63,7 +63,7 @@ const ListItem = React.forwardRef<
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
-        </a>
+        </Link>
       </NavigationMenuLink>
     </li>
   );
@@ -291,10 +291,10 @@ export default function HomeHeader() {
                       </>
                     ) : (
                       <NavigationMenuLink
+                        asChild
                         className={cn(navigationMenuTriggerStyle(), "h-7")}
-                        href={`/${category.slug}`}
                       >
-                        {category.name}
+                        <Link href={`/${category.slug}`}>{category.name}</Link>
                       </NavigationMenuLink>
                     )}
                   </NavigationMenuItem>

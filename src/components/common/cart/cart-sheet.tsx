@@ -119,7 +119,7 @@ export function CartSheet() {
                       <h4 className="text-xs font-medium text-foreground line-clamp-2 leading-tight">
                         {item.slug ? (
                           <Link
-                            href={`/product/${item.slug}`}
+                            href={route.public.productDetails(item.slug)}
                             onClick={() => setIsOpen(false)}
                             className="hover:underline"
                           >
