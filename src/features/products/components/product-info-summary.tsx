@@ -17,6 +17,7 @@ import {
 
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { route } from "@/routes/routes";
 import type { ProductDetails } from "../types/product.types";
@@ -78,7 +79,6 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
       },
       quantity,
     );
-    setIsOpen(true);
     router.push(route.public.cart);
   };
 
@@ -181,24 +181,32 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
       </div>
 
       {/* Quantity & CTA Action Buttons */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2">
         {/* Quantity Controls */}
-        <div className="flex items-center border border-border rounded-lg bg-background p-1 self-start">
+        <div className="flex items-center border border-border rounded-lg overflow-hidden bg-background h-11 shadow-xs shrink-0 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors cursor-pointer"
+            disabled={quantity <= 1}
+            className="h-full px-3 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Decrease quantity"
           >
             <HugeiconsIcon icon={Remove01Icon} className="w-4 h-4" />
           </button>
-          <span className="px-4 text-sm font-bold min-w-[32px] text-center select-none">
-            {quantity}
-          </span>
+          <input
+            type="number"
+            min={1}
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(Math.max(1, parseInt(e.target.value, 10) || 1))
+            }
+            className="h-full w-14 text-center font-bold text-sm bg-transparent border-x border-border outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none p-0 px-1 text-foreground"
+            aria-label="Quantity"
+          />
           <button
             type="button"
             onClick={() => setQuantity((q) => q + 1)}
-            className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-md transition-colors cursor-pointer"
+            className="h-full px-3 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer shrink-0"
             aria-label="Increase quantity"
           >
             <HugeiconsIcon icon={Add01Icon} className="w-4 h-4" />
@@ -210,18 +218,15 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
           <Button
             onClick={handleAddToCart}
             variant="outline"
-            className="flex-1 h-11 cursor-pointer font-semibold gap-2 border-primary/40 hover:bg-primary/5"
+            className="flex-1 h-11 cursor-pointer font-semibold gap-2"
           >
-            <HugeiconsIcon
-              icon={ShoppingCart02Icon}
-              className="w-4 h-4 text-primary"
-            />
+            <HugeiconsIcon icon={ShoppingCart02Icon} className="w-4 h-4" />
             Add to Cart
           </Button>
 
           <Button
             onClick={handleBuyNow}
-            className="flex-1 h-11 cursor-pointer font-semibold gap-2 shadow-xs"
+            className="flex-1 h-11 cursor-pointer font-semibold gap-2"
           >
             <HugeiconsIcon icon={ZapIcon} className="w-4 h-4" />
             Buy Now

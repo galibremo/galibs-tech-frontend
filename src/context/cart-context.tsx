@@ -18,6 +18,7 @@ export interface CartContextType {
   removeFromCart: (id: string) => void;
   addQuantity: (id: string) => void;
   removeQuantity: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   subtotal: number;

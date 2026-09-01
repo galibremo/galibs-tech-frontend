@@ -84,6 +84,16 @@ export default function CartProvider({
     );
   }, []);
 
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    setItems((prevItems) =>
+      prevItems
+        .map((item) =>
+          item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item,
+        )
+        .filter((item) => item.quantity > 0),
+    );
+  }, []);
+
   const clearCart = useCallback(() => {
     setItems([]);
   }, []);
@@ -108,6 +118,7 @@ export default function CartProvider({
       removeFromCart,
       addQuantity,
       removeQuantity,
+      updateQuantity,
       clearCart,
       totalItems,
       subtotal,
@@ -122,6 +133,7 @@ export default function CartProvider({
       removeFromCart,
       addQuantity,
       removeQuantity,
+      updateQuantity,
       clearCart,
       totalItems,
       subtotal,
