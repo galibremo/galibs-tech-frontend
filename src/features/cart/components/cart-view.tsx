@@ -43,8 +43,7 @@ export default function CartView() {
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
   const [discountAmount, setDiscountAmount] = useState(0);
 
-  const deliveryFee = items.length > 0 ? 110 : 0;
-  const total = Math.max(0, subtotal + deliveryFee - discountAmount);
+  const total = Math.max(0, subtotal - discountAmount);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -229,7 +228,7 @@ export default function CartView() {
                         </div>
 
                         {/* Item Total & Per Unit Price */}
-                        <div className="text-right min-w-[90px]">
+                        <div className="text-right min-w-22.5">
                           <div className="text-sm sm:text-base font-bold text-foreground">
                             {(item.price * item.quantity).toLocaleString()}৳
                           </div>
@@ -319,13 +318,6 @@ export default function CartView() {
                     <span>Sub-Total:</span>
                     <span className="font-bold text-foreground">
                       {subtotal.toLocaleString()}৳
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center text-muted-foreground">
-                    <span>Home Delivery:</span>
-                    <span className="font-bold text-foreground">
-                      {deliveryFee.toLocaleString()}৳
                     </span>
                   </div>
 
