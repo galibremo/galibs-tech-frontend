@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Home01Icon,
@@ -62,12 +63,14 @@ export default function CartView() {
     }
   };
 
+  const router = useRouter();
+
   const handleCheckout = () => {
     if (items.length === 0) {
       toast.error("Your cart is empty");
       return;
     }
-    toast.info("Proceeding to checkout...");
+    router.push(route.public.checkout);
   };
 
   return (

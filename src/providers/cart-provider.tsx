@@ -4,6 +4,12 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import { CartContext, CartItem } from "@/context/cart-context";
 
+import {
+  addBackendCartItem,
+  clearBackendCart,
+  fetchBackendCart,
+} from "@/features/cart/api/cart-api";
+
 const CART_STORAGE_KEY = "ecommerce_cart";
 
 export default function CartProvider({
@@ -40,6 +46,20 @@ export default function CartProvider({
     }
   }, [items, isHydrated]);
 
+  const syncCartWithBackend = useCallback(async () => {
+    try {
+      await clearBackendCart();
+      for (const item of items) {
+        await addBackendCartItem({
+          productId: item.id,
+          quantity: item.quantity,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to sync cart with backend:", error);
+    }
+  }, [items]);
+
   const addToCart = useCallback(
     (product: Omit<CartItem, "quantity">, quantityToAdd: number = 1) => {
       setItems((prevItems) => {
@@ -57,6 +77,13 @@ export default function CartProvider({
           return [...prevItems, { ...product, quantity: quantityToAdd }];
         }
       });
+
+      // Background sync to backend cart
+      addBackendCartItem({
+        productId: product.id,
+        quantity: quantityToAdd,
+      }).catch((err) => console.error("Error adding item to backend cart:", err));
+
       toast.success(`${product.name} added to cart`);
     },
     [],
@@ -96,6 +123,9 @@ export default function CartProvider({
 
   const clearCart = useCallback(() => {
     setItems([]);
+    clearBackendCart().catch((err) =>
+      console.error("Error clearing backend cart:", err),
+    );
   }, []);
 
   const openCart = useCallback(() => setIsOpen(true), []);
@@ -120,6 +150,7 @@ export default function CartProvider({
       removeQuantity,
       updateQuantity,
       clearCart,
+      syncCartWithBackend,
       totalItems,
       subtotal,
       isOpen,
@@ -135,6 +166,7 @@ export default function CartProvider({
       removeQuantity,
       updateQuantity,
       clearCart,
+      syncCartWithBackend,
       totalItems,
       subtotal,
       isOpen,

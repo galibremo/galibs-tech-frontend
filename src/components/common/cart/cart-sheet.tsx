@@ -198,27 +198,39 @@ export function CartSheet() {
                 </p>
               </div>
 
-              <div className="flex gap-2 w-full pt-1">
-                <Button
-                  variant="outline"
-                  onClick={clearCart}
-                  className="flex-1 cursor-pointer text-xs h-9"
-                >
-                  Clear Cart
-                </Button>
+              <div className="flex flex-col gap-2 w-full pt-1">
                 <Button
                   asChild
                   onClick={() => setIsOpen(false)}
-                  className="flex-1 cursor-pointer text-xs h-9 gap-1.5"
+                  className="w-full cursor-pointer text-xs h-9 gap-1.5 font-bold"
                 >
-                  <Link href={route.public.cart}>
-                    View Cart
+                  <Link href={route.public.checkout}>
+                    Proceed to Checkout
                     <HugeiconsIcon
-                      icon={ShoppingCart02Icon}
+                      icon={ArrowRight01Icon}
                       className="w-3.5 h-3.5"
                     />
                   </Link>
                 </Button>
+                <div className="flex gap-2 w-full">
+                  <Button
+                    variant="outline"
+                    onClick={clearCart}
+                    className="flex-1 cursor-pointer text-xs h-8"
+                  >
+                    Clear Cart
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    asChild
+                    onClick={() => setIsOpen(false)}
+                    className="flex-1 cursor-pointer text-xs h-8 gap-1.5"
+                  >
+                    <Link href={route.public.cart}>
+                      View Cart
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </SheetFooter>
           </>

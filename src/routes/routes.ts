@@ -2,6 +2,8 @@ export const route = {
   public: {
     home: "/",
     cart: "/cart",
+    checkout: "/checkout",
+    orderDetails: (id: string) => `/orders/${id}`,
     catalog: (slug: string) => `/${slug}`,
     productDetails: (slug: string) => `/${slug}`,
   },
@@ -69,6 +71,14 @@ export const apiRoute = {
   products: "/products",
   productBySlug: (slug: string) => `/products/${slug}`,
   productSpecs: (id: string) => `/products/${id}/specifications`,
+
+  cart: "/cart",
+  cartItems: "/cart/items",
+  cartItem: (id: string) => `/cart/items/${id}`,
+  checkout: "/checkout",
+  orders: "/orders",
+  order: (id: string) => `/orders/${id}`,
+  orderInvoice: (id: string) => `/orders/${id}/invoice`,
 } as const;
 
 const DEFAULT_LOGIN_REDIRECT = route.private.dashboard;

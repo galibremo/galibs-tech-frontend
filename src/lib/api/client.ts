@@ -59,6 +59,15 @@ export async function fetchClient<T = unknown>(
     headers.set("Content-Type", "application/json");
   }
 
+  if (typeof window !== "undefined" && !headers.has("X-Guest-Token")) {
+    let guestToken = localStorage.getItem("x_guest_token");
+    if (!guestToken) {
+      guestToken = crypto.randomUUID();
+      localStorage.setItem("x_guest_token", guestToken);
+    }
+    headers.set("X-Guest-Token", guestToken);
+  }
+
   const response = await fetch(url, {
     ...rest,
     body: serializedBody,

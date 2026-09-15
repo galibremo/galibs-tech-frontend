@@ -20,6 +20,7 @@ export interface CartContextType {
   removeQuantity: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  syncCartWithBackend: () => Promise<void>;
   totalItems: number;
   subtotal: number;
   isOpen: boolean;
