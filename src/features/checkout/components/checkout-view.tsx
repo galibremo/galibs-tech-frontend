@@ -78,7 +78,6 @@ export default function CheckoutView() {
   const [deliveryMethod, setDeliveryMethod] = useState<"HOME" | "PICKUP" | "EXPRESS">("HOME");
   
   // Coupon
-  const [activeTab, setActiveTab] = useState<"coupon" | "voucher">("coupon");
   const [couponCode, setCouponCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
 
@@ -597,42 +596,15 @@ export default function CheckoutView() {
                   </h2>
                 </div>
 
-                {/* Get Some Extra / Promo Box */}
+                {/* Promo / Coupon Box */}
                 <div className="p-4 rounded-xl border border-dashed border-border/80 bg-muted/20 space-y-3">
                   <div>
                     <h3 className="text-xs sm:text-sm font-bold text-foreground">
                       Get Some Extra
                     </h3>
                     <p className="text-[11px] text-muted-foreground">
-                      Use coupon/voucher/star points
+                      Apply your promo/coupon code below
                     </p>
-                  </div>
-
-                  {/* Toggle Tabs */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("coupon")}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors ${
-                        activeTab === "coupon"
-                          ? "bg-indigo-600 text-white shadow-2xs"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      <HugeiconsIcon icon={DiscountTag01Icon} className="w-3.5 h-3.5 inline mr-1" />
-                      Coupon
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("voucher")}
-                      className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors ${
-                        activeTab === "voucher"
-                          ? "bg-indigo-600 text-white shadow-2xs"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      }`}
-                    >
-                      Gift Voucher
-                    </button>
                   </div>
 
                   {/* Promo Input & Apply */}
