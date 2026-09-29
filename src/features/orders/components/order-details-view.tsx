@@ -21,41 +21,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getOrder, getInvoice, Order, InvoiceResponse } from "../api/orders-api";
 import { route } from "@/routes/routes";
 import { toast } from "sonner";
+
+import { useOrderDetails } from "../actions/orders.queries";
 
 interface OrderDetailsViewProps {
   orderId: string;
 }
 
 export default function OrderDetailsView({ orderId }: OrderDetailsViewProps) {
-  const [order, setOrder] = useState<Order | null>(null);
-  const [invoice, setInvoice] = useState<InvoiceResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, isLoading, error } = useOrderDetails(orderId);
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const orderData = await getOrder(orderId);
-        setOrder(orderData);
-        try {
-          const invoiceData = await getInvoice(orderId);
-          setInvoice(invoiceData);
-        } catch {
-          // Invoice optional fallback
-        }
-      } catch (err: any) {
-        setError(err.message || "Failed to load order details");
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, [orderId]);
+  const order = data?.order || null;
+  const invoice = data?.invoice || null;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="py-16 flex flex-col items-center justify-center min-h-[50vh]">
         <HugeiconsIcon icon={Loading01Icon} className="w-8 h-8 text-primary animate-spin mb-2" />
@@ -68,7 +49,7 @@ export default function OrderDetailsView({ orderId }: OrderDetailsViewProps) {
     return (
       <Container className="py-12 px-4 text-center">
         <h2 className="text-xl font-bold mb-2">Order Not Found</h2>
-        <p className="text-sm text-muted-foreground mb-6">{error || "Could not locate this order."}</p>
+        <p className="text-sm text-muted-foreground mb-6">{error?.message || "Could not locate this order."}</p>
         <Button asChild>
           <Link href={route.public.home}>Return Home</Link>
         </Button>

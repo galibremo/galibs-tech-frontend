@@ -51,7 +51,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { route } from "@/routes/routes";
 import { toast } from "sonner";
-import { checkoutOrder } from "@/features/orders/api/orders-api";
+import { checkoutOrder } from "@/features/orders/actions/orders.actions";
 
 const BANGLADESH_DISTRICTS = [
   "Dhaka - City",

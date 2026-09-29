@@ -216,7 +216,7 @@ export function CartSheet() {
                 <div className="flex gap-2 w-full">
                   <Button
                     variant="outline"
-                    onClick={clearCart}
+                    onClick={() => clearCart()}
                     className="flex-1 cursor-pointer text-xs h-8"
                   >
                     Clear Cart
