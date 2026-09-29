@@ -196,7 +196,8 @@ export default function CartView() {
                           <button
                             type="button"
                             onClick={() => removeQuantity(item.id)}
-                            className="h-full px-2.5 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer shrink-0"
+                            disabled={item.quantity <= 1}
+                            className="h-full px-2.5 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                             aria-label="Decrease quantity"
                           >
                             <HugeiconsIcon

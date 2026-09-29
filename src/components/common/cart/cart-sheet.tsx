@@ -158,7 +158,8 @@ export function CartSheet() {
                         <button
                           type="button"
                           onClick={() => removeQuantity(item.id)}
-                          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                          disabled={item.quantity <= 1}
+                          className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label="Decrease quantity"
                         >
                           <HugeiconsIcon
@@ -226,9 +227,7 @@ export function CartSheet() {
                     onClick={() => setIsOpen(false)}
                     className="flex-1 cursor-pointer text-xs h-8 gap-1.5"
                   >
-                    <Link href={route.public.cart}>
-                      View Cart
-                    </Link>
+                    <Link href={route.public.cart}>View Cart</Link>
                   </Button>
                 </div>
               </div>
