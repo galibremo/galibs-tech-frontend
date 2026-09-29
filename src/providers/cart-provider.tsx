@@ -8,7 +8,7 @@ import {
   addBackendCartItem,
   clearBackendCart,
   fetchBackendCart,
-} from "@/features/cart/api/cart-api";
+} from "@/features/cart/actions/cart.actions";
 
 const CART_STORAGE_KEY = "ecommerce_cart";
 

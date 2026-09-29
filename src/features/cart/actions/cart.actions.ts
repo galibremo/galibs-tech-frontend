@@ -1,24 +1,6 @@
 import { fetchClient } from "@/lib/api/client";
 import { apiRoute } from "@/routes/routes";
-
-export interface BackendCartItem {
-  id: string;
-  productId: string;
-  variantId: string | null;
-  name: string;
-  sku: string;
-  quantity: number;
-  unitPrice: number;
-  lineTotal: number;
-  thumbnailUrl: string | null;
-}
-
-export interface BackendCart {
-  id: string;
-  items: BackendCartItem[];
-  itemCount: number;
-  subtotal: number;
-}
+import type { BackendCart } from "../types/cart.types";
 
 export async function fetchBackendCart(): Promise<BackendCart> {
   return fetchClient<BackendCart>({
