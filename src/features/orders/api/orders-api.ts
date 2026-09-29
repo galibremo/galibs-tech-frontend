@@ -16,6 +16,11 @@ export interface CheckoutInput {
   shippingAddress: ShippingAddressInput;
   paymentMethod: "COD" | "BKASH";
   notes?: string | null;
+  items: {
+    productId: string;
+    variantId?: string | null;
+    quantity: number;
+  }[];
 }
 
 export interface OrderItem {

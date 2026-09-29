@@ -1,16 +1,21 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  checkoutSchema,
+  type CheckoutSchemaType,
+} from "@/features/checkout/schemas/checkout-schema";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Home01Icon,
   ShoppingBag01Icon,
   DeliveryTruck01Icon,
   Store01Icon,
-  DiscountTag01Icon,
   ArrowRight01Icon,
   Loading01Icon,
   Invoice01Icon,
@@ -22,6 +27,13 @@ import { Container } from "@/components/custom-ui/container";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -61,29 +73,36 @@ const BANGLADESH_DISTRICTS = [
 
 export default function CheckoutView() {
   const router = useRouter();
-  const { items, subtotal, clearCart, syncCartWithBackend } = useCart();
+  const { items, subtotal, clearCart } = useCart();
 
-  // Form Fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [upazilaThana, setUpazilaThana] = useState("");
-  const [district, setDistrict] = useState("Dhaka - City");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
-  const [comment, setComment] = useState("");
+  // Form setup
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { isSubmitting },
+  } = useForm<CheckoutSchemaType>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      address: "",
+      upazilaThana: "",
+      district: "Dhaka - City",
+      mobile: "",
+      email: "",
+      comment: "",
+      paymentMethod: "COD",
+      deliveryMethod: "HOME",
+      agreedToTerms: true,
+    },
+  });
 
-  // Options
-  const [paymentMethod, setPaymentMethod] = useState<"COD" | "ONLINE" | "POS">("COD");
-  const [deliveryMethod, setDeliveryMethod] = useState<"HOME" | "PICKUP" | "EXPRESS">("HOME");
-  
+  const deliveryMethod = watch("deliveryMethod");
+
   // Coupon
   const [couponCode, setCouponCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
-
-  // Agreement & Submitting state
-  const [agreedToTerms, setAgreedToTerms] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Delivery fee calculation
   const deliveryFee =
@@ -106,81 +125,46 @@ export default function CheckoutView() {
     }
   };
 
-  const handleConfirmOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleConfirmOrder = async (values: CheckoutSchemaType) => {
     if (items.length === 0) {
       toast.error("Your cart is empty");
       return;
     }
 
-    if (!firstName.trim() || !lastName.trim()) {
-      toast.error("Please enter your First and Last Name");
-      return;
-    }
-
-    if (!address.trim()) {
-      toast.error("Please enter your Address");
-      return;
-    }
-
-    if (!upazilaThana.trim()) {
-      toast.error("Please enter your Upazila/Thana");
-      return;
-    }
-
-    if (!mobile.trim()) {
-      toast.error("Please enter your Mobile Number");
-      return;
-    }
-
-    if (!email.trim()) {
-      toast.error("Please enter your Email address");
-      return;
-    }
-
-    if (!agreedToTerms) {
-      toast.error("You must agree to the Terms & Conditions to place an order");
-      return;
-    }
-
     // Format phone number for libphonenumber-js backend validator
-    let formattedPhone = mobile.trim();
+    let formattedPhone = values.mobile.trim();
     if (formattedPhone.startsWith("0")) {
       formattedPhone = `+88${formattedPhone}`;
     } else if (!formattedPhone.startsWith("+")) {
       formattedPhone = `+880${formattedPhone}`;
     }
 
-    setIsSubmitting(true);
     try {
-      // First ensure cart is synced to backend database
-      await syncCartWithBackend();
+      const fullName = `${values.firstName.trim()} ${values.lastName.trim()}`;
 
-      const fullName = `${firstName.trim()} ${lastName.trim()}`;
-
-      // Call backend checkout endpoint
+      // Call backend checkout endpoint in a single request
       const order = await checkoutOrder({
         shippingAddress: {
           fullName,
           phone: formattedPhone,
-          email: email.trim(),
-          addressLine1: address.trim(),
-          city: upazilaThana.trim(),
-          district: district.trim(),
+          email: values.email.trim(),
+          addressLine1: values.address.trim(),
+          city: values.upazilaThana.trim(),
+          district: values.district.trim(),
         },
-        paymentMethod: "COD", // Active backend method
-        notes: comment.trim() || undefined,
+        paymentMethod: values.paymentMethod as "COD" | "BKASH",
+        notes: values.comment?.trim() || undefined,
+        items: items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
       });
 
       toast.success(`Order #${order.orderNumber} placed successfully!`);
-      clearCart();
+      clearCart({ skipBackend: true });
       router.push(route.public.orderDetails(order.id));
     } catch (err: any) {
-      console.error("Order error:", err);
       toast.error(err.message || "Failed to place order. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -232,14 +216,21 @@ export default function CheckoutView() {
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleConfirmOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <form
+            onSubmit={handleSubmit(handleConfirmOrder)}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+            noValidate
+          >
             {/* Left Column (8 cols) */}
             <div className="lg:col-span-8 space-y-6">
               {/* Shipping & Billing Section */}
               <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
                 <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
                   <div className="p-1.5 rounded-md bg-orange-500/10 text-orange-600 dark:text-orange-400">
-                    <HugeiconsIcon icon={Invoice01Icon} className="w-5 h-5 text-orange-600" />
+                    <HugeiconsIcon
+                      icon={Invoice01Icon}
+                      className="w-5 h-5 text-orange-600"
+                    />
                   </div>
                   <h2 className="text-base sm:text-lg font-bold text-foreground">
                     Shipping & Billing
@@ -248,125 +239,218 @@ export default function CheckoutView() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* First Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      First Name<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="First Name*"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                    />
-                  </div>
+                  <Controller
+                    name="firstName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="firstName"
+                          className="text-xs font-semibold text-foreground flex items-center gap-1"
+                        >
+                          First Name<span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input
+                            {...field}
+                            id="firstName"
+                            placeholder="First Name*"
+                            className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                          />
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Last Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      Last Name<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="Last Name*"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                    />
-                  </div>
+                  <Controller
+                    name="lastName"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="lastName"
+                          className="text-xs font-semibold text-foreground flex items-center gap-1"
+                        >
+                          Last Name<span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input
+                            {...field}
+                            id="lastName"
+                            placeholder="Last Name*"
+                            className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                          />
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Address */}
-                  <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      Address<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="Address*"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                  <div className="sm:col-span-2">
+                    <Controller
+                      name="address"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field className="space-y-1.5">
+                          <FieldLabel
+                            htmlFor="address"
+                            className="text-xs font-semibold text-foreground flex items-center gap-1"
+                          >
+                            Address<span className="text-red-500">*</span>
+                          </FieldLabel>
+                          <FieldContent>
+                            <Input
+                              {...field}
+                              id="address"
+                              placeholder="Address*"
+                              className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                            />
+                            <FieldError>{fieldState.error?.message}</FieldError>
+                          </FieldContent>
+                        </Field>
+                      )}
                     />
                   </div>
 
                   {/* Upazila / Thana */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      Upazila/Thana<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="Upazila/Thana*"
-                      value={upazilaThana}
-                      onChange={(e) => setUpazilaThana(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                    />
-                  </div>
+                  <Controller
+                    name="upazilaThana"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="upazilaThana"
+                          className="text-xs font-semibold text-foreground flex items-center gap-1"
+                        >
+                          Upazila/Thana<span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input
+                            {...field}
+                            id="upazilaThana"
+                            placeholder="Upazila/Thana*"
+                            className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                          />
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* District */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground">
-                      District
-                    </label>
-                    <Select value={district} onValueChange={setDistrict}>
-                      <SelectTrigger className="bg-background border-border/80 h-10 text-sm w-full">
-                        <SelectValue placeholder="Select District" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {BANGLADESH_DISTRICTS.map((d) => (
-                          <SelectItem key={d} value={d}>
-                            {d}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Controller
+                    name="district"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="district"
+                          className="text-xs font-semibold text-foreground"
+                        >
+                          District
+                        </FieldLabel>
+                        <FieldContent>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger className="bg-background border-border/80 h-10! text-sm w-full">
+                              <SelectValue placeholder="Select District" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {BANGLADESH_DISTRICTS.map((d) => (
+                                <SelectItem key={d} value={d}>
+                                  {d}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Mobile */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      Mobile<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="tel"
-                      placeholder="Telephone*"
-                      value={mobile}
-                      onChange={(e) => setMobile(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                    />
-                  </div>
+                  <Controller
+                    name="mobile"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="mobile"
+                          className="text-xs font-semibold text-foreground flex items-center gap-1"
+                        >
+                          Mobile<span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input
+                            {...field}
+                            type="tel"
+                            id="mobile"
+                            placeholder="Telephone*"
+                            className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                          />
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Email */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                      Email<span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      type="email"
-                      placeholder="E-Mail*"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                    />
-                  </div>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-1.5">
+                        <FieldLabel
+                          htmlFor="email"
+                          className="text-xs font-semibold text-foreground flex items-center gap-1"
+                        >
+                          Email<span className="text-red-500">*</span>
+                        </FieldLabel>
+                        <FieldContent>
+                          <Input
+                            {...field}
+                            type="email"
+                            id="email"
+                            placeholder="E-Mail*"
+                            className="bg-background border-border/80 h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary"
+                          />
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Comment */}
-                  <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-semibold text-foreground">
-                      Comment
-                    </label>
-                    <Textarea
-                      placeholder="Any special requirement/instruction for us?"
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      rows={3}
-                      className="bg-background border-border/80 text-sm resize-none focus-visible:ring-1 focus-visible:ring-primary"
+                  <div className="sm:col-span-2">
+                    <Controller
+                      name="comment"
+                      control={control}
+                      render={({ field, fieldState }) => (
+                        <Field className="space-y-1.5">
+                          <FieldLabel
+                            htmlFor="comment"
+                            className="text-xs font-semibold text-foreground"
+                          >
+                            Comment
+                          </FieldLabel>
+                          <FieldContent>
+                            <Textarea
+                              {...field}
+                              id="comment"
+                              placeholder="Any special requirement/instruction for us?"
+                              rows={3}
+                              className="bg-background border-border/80 text-sm resize-none focus-visible:ring-1 focus-visible:ring-primary"
+                            />
+                            <FieldError>{fieldState.error?.message}</FieldError>
+                          </FieldContent>
+                        </Field>
+                      )}
                     />
                   </div>
                 </div>
@@ -378,7 +462,10 @@ export default function CheckoutView() {
                 <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
                     <div className="p-1.5 rounded-md bg-orange-500/10 text-orange-600">
-                      <HugeiconsIcon icon={CreditCardIcon} className="w-5 h-5 text-orange-600" />
+                      <HugeiconsIcon
+                        icon={CreditCardIcon}
+                        className="w-5 h-5 text-orange-600"
+                      />
                     </div>
                     <h2 className="text-base sm:text-lg font-bold text-foreground">
                       Payment Method
@@ -389,62 +476,56 @@ export default function CheckoutView() {
                     Select a payment method
                   </p>
 
-                  <div className="space-y-2.5">
-                    {/* Cash on Delivery (Active) */}
-                    <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="COD"
-                        checked={paymentMethod === "COD"}
-                        onChange={() => setPaymentMethod("COD")}
-                        className="w-4 h-4 text-primary accent-primary cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm font-semibold text-foreground">
-                        Cash on Delivery
-                      </span>
-                    </label>
+                  <Controller
+                    name="paymentMethod"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-2.5">
+                        <FieldContent>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="flex flex-col space-y-2.5"
+                          >
+                            {/* Cash on Delivery (Active) */}
+                            <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
+                              <RadioGroupItem value="COD" />
+                              <span className="text-xs sm:text-sm font-semibold text-foreground">
+                                Cash on Delivery
+                              </span>
+                            </label>
 
-                    {/* Online Payment (Displayed & Disabled) */}
-                    <label className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-muted/30 cursor-not-allowed opacity-60">
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value="ONLINE"
-                          disabled
-                          checked={paymentMethod === "ONLINE"}
-                          className="w-4 h-4 cursor-not-allowed"
-                        />
-                        <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
-                          Online Payment
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground">
-                        Unavailable
-                      </span>
-                    </label>
+                            {/* Online Payment (Displayed & Disabled) */}
+                            <label className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-muted/30 cursor-not-allowed opacity-60">
+                              <div className="flex items-center gap-3">
+                                <RadioGroupItem value="ONLINE" disabled />
+                                <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
+                                  Online Payment
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                                Unavailable
+                              </span>
+                            </label>
 
-                    {/* POS on Delivery (Displayed & Disabled) */}
-                    <label className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-muted/30 cursor-not-allowed opacity-60">
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="radio"
-                          name="paymentMethod"
-                          value="POS"
-                          disabled
-                          checked={paymentMethod === "POS"}
-                          className="w-4 h-4 cursor-not-allowed"
-                        />
-                        <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
-                          POS on Delivery
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground">
-                        Unavailable
-                      </span>
-                    </label>
-                  </div>
+                            {/* POS on Delivery (Displayed & Disabled) */}
+                            <label className="flex items-center justify-between p-2.5 rounded-lg border border-border/40 bg-muted/30 cursor-not-allowed opacity-60">
+                              <div className="flex items-center gap-3">
+                                <RadioGroupItem value="POS" disabled />
+                                <span className="text-xs sm:text-sm font-semibold text-muted-foreground">
+                                  POS on Delivery
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                                Unavailable
+                              </span>
+                            </label>
+                          </RadioGroup>
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
 
                   {/* Payment Badges Logos */}
                   <div className="pt-3 border-t border-border/60 space-y-2">
@@ -478,7 +559,10 @@ export default function CheckoutView() {
                 <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
                     <div className="p-1.5 rounded-md bg-orange-500/10 text-orange-600">
-                      <HugeiconsIcon icon={DeliveryTruck01Icon} className="w-5 h-5 text-orange-600" />
+                      <HugeiconsIcon
+                        icon={DeliveryTruck01Icon}
+                        className="w-5 h-5 text-orange-600"
+                      />
                     </div>
                     <h2 className="text-base sm:text-lg font-bold text-foreground">
                       Delivery Method
@@ -489,52 +573,46 @@ export default function CheckoutView() {
                     Select a delivery method
                   </p>
 
-                  <div className="space-y-2.5">
-                    {/* Home Delivery - 200৳ */}
-                    <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
-                      <input
-                        type="radio"
-                        name="deliveryMethod"
-                        value="HOME"
-                        checked={deliveryMethod === "HOME"}
-                        onChange={() => setDeliveryMethod("HOME")}
-                        className="w-4 h-4 text-primary accent-primary cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm font-semibold text-foreground">
-                        Home Delivery - 200৳
-                      </span>
-                    </label>
+                  <Controller
+                    name="deliveryMethod"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <Field className="space-y-2.5">
+                        <FieldContent>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="flex flex-col space-y-2.5"
+                          >
+                            {/* Home Delivery - 200৳ */}
+                            <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
+                              <RadioGroupItem value="HOME" />
+                              <span className="text-xs sm:text-sm font-semibold text-foreground">
+                                Home Delivery - 200৳
+                              </span>
+                            </label>
 
-                    {/* Store Pickup - 0৳ */}
-                    <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
-                      <input
-                        type="radio"
-                        name="deliveryMethod"
-                        value="PICKUP"
-                        checked={deliveryMethod === "PICKUP"}
-                        onChange={() => setDeliveryMethod("PICKUP")}
-                        className="w-4 h-4 text-primary accent-primary cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm font-semibold text-foreground">
-                        Store Pickup - 0৳
-                      </span>
-                    </label>
+                            {/* Store Pickup - 0৳ */}
+                            <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
+                              <RadioGroupItem value="PICKUP" />
+                              <span className="text-xs sm:text-sm font-semibold text-foreground">
+                                Store Pickup - 0৳
+                              </span>
+                            </label>
 
-                    {/* Request Express - 450৳ */}
-                    <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
-                      <input
-                        type="radio"
-                        name="deliveryMethod"
-                        value="EXPRESS"
-                        checked={deliveryMethod === "EXPRESS"}
-                        onChange={() => setDeliveryMethod("EXPRESS")}
-                        className="w-4 h-4 text-primary accent-primary cursor-pointer"
-                      />
-                      <span className="text-xs sm:text-sm font-semibold text-foreground">
-                        Request Express - 450৳
-                      </span>
-                    </label>
-                  </div>
+                            {/* Request Express - 450৳ */}
+                            <label className="flex items-center gap-3 p-2.5 rounded-lg border border-border bg-background cursor-pointer hover:border-primary/50 transition-colors">
+                              <RadioGroupItem value="EXPRESS" />
+                              <span className="text-xs sm:text-sm font-semibold text-foreground">
+                                Request Express - 450৳
+                              </span>
+                            </label>
+                          </RadioGroup>
+                          <FieldError>{fieldState.error?.message}</FieldError>
+                        </FieldContent>
+                      </Field>
+                    )}
+                  />
                 </div>
               </div>
 
@@ -542,7 +620,10 @@ export default function CheckoutView() {
               <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-4">
                 <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
                   <div className="p-1.5 rounded-md bg-orange-500/10 text-orange-600">
-                    <HugeiconsIcon icon={Store01Icon} className="w-5 h-5 text-orange-600" />
+                    <HugeiconsIcon
+                      icon={Store01Icon}
+                      className="w-5 h-5 text-orange-600"
+                    />
                   </div>
                   <h2 className="text-base sm:text-lg font-bold text-foreground">
                     Products
@@ -585,11 +666,14 @@ export default function CheckoutView() {
             </div>
 
             {/* Right Column - Order Summary (4 cols) */}
-            <div className="lg:col-span-4">
-              <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-5 sticky top-20">
+            <div className="lg:col-span-4 sticky top-34 z-10 h-max">
+              <div className="bg-card border border-border/80 rounded-xl p-5 sm:p-6 shadow-xs space-y-5">
                 <div className="flex items-center gap-2.5 pb-3 border-b border-border/60">
                   <div className="p-1.5 rounded-md bg-orange-500/10 text-orange-600">
-                    <HugeiconsIcon icon={Invoice01Icon} className="w-5 h-5 text-orange-600" />
+                    <HugeiconsIcon
+                      icon={Invoice01Icon}
+                      className="w-5 h-5 text-orange-600"
+                    />
                   </div>
                   <h2 className="text-base sm:text-lg font-bold text-foreground">
                     Order Summary
@@ -614,13 +698,13 @@ export default function CheckoutView() {
                       placeholder="Promo / Coupon Code"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="bg-background h-9 text-xs uppercase"
+                      className="bg-background border-border/80 text-sm focus-visible:ring-1 focus-visible:ring-primary"
                     />
                     <Button
                       type="button"
                       onClick={handleApplyCoupon}
                       variant="secondary"
-                      className="h-9 px-3 text-xs font-semibold cursor-pointer shrink-0"
+                      className="h-8.5 px-3 text-xs font-semibold cursor-pointer shrink-0"
                     >
                       Apply
                     </Button>
@@ -656,8 +740,8 @@ export default function CheckoutView() {
                       {deliveryMethod === "HOME"
                         ? "Home Delivery:"
                         : deliveryMethod === "EXPRESS"
-                        ? "Express Delivery:"
-                        : "Store Pickup:"}
+                          ? "Express Delivery:"
+                          : "Store Pickup:"}
                     </span>
                     <span className="font-bold text-foreground">
                       {deliveryFee}৳
@@ -675,29 +759,44 @@ export default function CheckoutView() {
                 </div>
 
                 {/* Terms and Conditions Checkbox */}
-                <div className="flex items-start gap-2.5">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-1 w-4 h-4 text-primary accent-primary rounded cursor-pointer"
-                  />
-                  <label htmlFor="terms" className="text-xs text-foreground leading-snug cursor-pointer select-none">
-                    I have read and agree to the{" "}
-                    <span className="text-[#D9381E] font-semibold hover:underline">
-                      Terms and Conditions
-                    </span>
-                    ,{" "}
-                    <span className="text-[#D9381E] font-semibold hover:underline">
-                      Privacy Policy
-                    </span>{" "}
-                    and{" "}
-                    <span className="text-[#D9381E] font-semibold hover:underline">
-                      Refund and Return Policy
-                    </span>
-                  </label>
-                </div>
+                <Controller
+                  name="agreedToTerms"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-start gap-2.5">
+                        <input
+                          type="checkbox"
+                          id="terms"
+                          checked={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
+                          className="mt-1 w-4 h-4 text-primary accent-primary rounded cursor-pointer"
+                        />
+                        <label
+                          htmlFor="terms"
+                          className="text-xs text-foreground leading-snug cursor-pointer select-none"
+                        >
+                          I have read and agree to the{" "}
+                          <span className="text-[#D9381E] font-semibold hover:underline">
+                            Terms and Conditions
+                          </span>
+                          ,{" "}
+                          <span className="text-[#D9381E] font-semibold hover:underline">
+                            Privacy Policy
+                          </span>{" "}
+                          and{" "}
+                          <span className="text-[#D9381E] font-semibold hover:underline">
+                            Refund and Return Policy
+                          </span>
+                        </label>
+                      </div>
+                      <FieldError>{fieldState.error?.message}</FieldError>
+                    </div>
+                  )}
+                />
 
                 {/* Confirm Order Button */}
                 <Button
@@ -707,7 +806,10 @@ export default function CheckoutView() {
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">
-                      <HugeiconsIcon icon={Loading01Icon} className="w-4 h-4 animate-spin" />
+                      <HugeiconsIcon
+                        icon={Loading01Icon}
+                        className="w-4 h-4 animate-spin"
+                      />
                       Placing Order...
                     </div>
                   ) : (

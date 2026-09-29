@@ -121,11 +121,13 @@ export default function CartProvider({
     );
   }, []);
 
-  const clearCart = useCallback(() => {
+  const clearCart = useCallback((options?: { skipBackend?: boolean }) => {
     setItems([]);
-    clearBackendCart().catch((err) =>
-      console.error("Error clearing backend cart:", err),
-    );
+    if (!options?.skipBackend) {
+      clearBackendCart().catch((err) =>
+        console.error("Error clearing backend cart:", err),
+      );
+    }
   }, []);
 
   const openCart = useCallback(() => setIsOpen(true), []);
