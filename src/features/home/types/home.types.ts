@@ -30,7 +30,7 @@ export interface CategoriesListResponse {
   rows: Category[];
   total: number;
   page: number;
-  pageSize: number;
+  limit: number;
 }
 
 
@@ -89,7 +89,7 @@ export interface FeaturedProductsListResponse {
   rows: FeaturedProduct[];
   total: number;
   page: number;
-  pageSize: number;
+  limit: number;
 }
 
 export interface ProductItem {
@@ -108,7 +108,7 @@ export interface ProductsListResponse {
   rows: ProductItem[];
   total: number;
   page: number;
-  pageSize: number;
+  limit: number;
 }
 
 export interface Brand {
@@ -130,5 +130,5 @@ export interface BrandsListResponse {
   rows: Brand[];
   total: number;
   page: number;
-  pageSize: number;
+  limit: number;
 }

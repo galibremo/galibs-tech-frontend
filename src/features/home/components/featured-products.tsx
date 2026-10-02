@@ -8,7 +8,7 @@ import { useFeaturedProductsQuery } from "../actions/home.queries";
 import ProductCard from "./product-card";
 
 export default function FeaturedProducts() {
-  const { data, isLoading } = useFeaturedProductsQuery({ pageSize: 10 });
+  const { data, isLoading } = useFeaturedProductsQuery({ limit: 10 });
 
   // Ensure maximum of 10 products are shown
   const products = React.useMemo(() => {

@@ -47,7 +47,7 @@ const defaultPagination: EmailLogListResponse = {
 	rows: [],
 	total: 0,
 	page: 1,
-	pageSize: 10
+	limit: 10
 };
 
 const sortableEmailLogColumns = new Set<string>(emailLogSortValues);
@@ -58,7 +58,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 	const filters = useMemo<EmailLogListQuery>(
 		() => ({
 			page: params.page,
-			pageSize: params.pageSize,
+			limit: params.limit,
 			providerId: params.providerId || undefined,
 			toEmail: params.toEmail || undefined,
 			status: params.status ? (params.status as EmailLogStatus) : undefined,
@@ -72,7 +72,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 			params.dir,
 			params.fromDate,
 			params.page,
-			params.pageSize,
+			params.limit,
 			params.providerId,
 			params.sort,
 			params.status,
@@ -84,7 +84,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 	const emailLogsQuery = useEmailLogsQuery(filters);
 	const providersQuery = useProvidersQuery({
 		page: 1,
-		pageSize: 500,
+		limit: 500,
 		sort: "name",
 		dir: "asc"
 	});
@@ -99,7 +99,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 	} = useResourceListHandlers({
 		setParams: values => setParams(values as Parameters<typeof setParams>[0]),
 		sortableColumns: sortableEmailLogColumns,
-		defaultPageSize: defaultPagination.pageSize,
+		defaultLimit: defaultPagination.limit,
 		refreshLabel: "email logs",
 		refetch: () => emailLogsQuery.refetch(),
 		resetExtras: {
@@ -133,7 +133,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 				rows: pagination.rows,
 				total: pagination.total,
 				page: pagination.page,
-				pageSize: pagination.pageSize
+				limit: pagination.limit
 			},
 			isLoading: emailLogsQuery.isLoading,
 			isFetching: emailLogsQuery.isFetching,
@@ -167,7 +167,7 @@ export function EmailLogListProvider({ children }: GlobalLayoutProps) {
 			handleStatusFilter,
 			handleToEmailChange,
 			pagination.page,
-			pagination.pageSize,
+			pagination.limit,
 			pagination.rows,
 			pagination.total,
 			params.dir,

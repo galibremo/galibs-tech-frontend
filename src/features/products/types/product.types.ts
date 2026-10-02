@@ -65,3 +65,16 @@ export interface ProductDetails {
   images?: ProductImage[];
   specifications?: SpecGroup[];
 }
+
+export interface ProductListQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
+export interface ProductListResponse {
+  rows: ProductDetails[];
+  total: number;
+  page: number;
+  limit: number;
+}

@@ -36,10 +36,10 @@ export function DataTablePagination<TData>({
 	const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 	useEffect(() => {
-		table.setPageSize(pagination.pageSize);
-	}, [pagination.pageSize, table]);
+		table.setLimit(pagination.limit);
+	}, [pagination.limit, table]);
 
-	const totalPages = Math.ceil(pagination.total / pagination.pageSize);
+	const totalPages = Math.ceil(pagination.total / pagination.limit);
 
 	if (pagination.total === 0) {
 		return null;
@@ -55,19 +55,19 @@ export function DataTablePagination<TData>({
 					<div className="flex items-center space-x-2">
 						<p className="text-sm font-medium">Rows</p>
 						<Select
-							value={`${pagination.pageSize}`}
+							value={`${pagination.limit}`}
 							onValueChange={value => {
 								handleOptionFilter("limit", value);
-								table.setPageSize(Number(value));
+								table.setLimit(Number(value));
 							}}
 						>
 							<SelectTrigger className="h-8 w-17.5">
-								<SelectValue placeholder={pagination.pageSize} />
+								<SelectValue placeholder={pagination.limit} />
 							</SelectTrigger>
 							<SelectContent side="top">
-								{PAGE_SIZE_OPTIONS.map(pageSize => (
-									<SelectItem key={pageSize} value={`${pageSize}`}>
-										{pageSize}
+								{PAGE_SIZE_OPTIONS.map(limit => (
+									<SelectItem key={limit} value={`${limit}`}>
+										{limit}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -141,19 +141,19 @@ export function DataTablePagination<TData>({
 				<div className="flex items-center space-x-2">
 					<p className="text-sm font-medium">Rows per page</p>
 					<Select
-						value={`${pagination.pageSize}`}
+						value={`${pagination.limit}`}
 						onValueChange={value => {
 							handleOptionFilter("limit", value);
-							table.setPageSize(Number(value));
+							table.setLimit(Number(value));
 						}}
 					>
 						<SelectTrigger className="h-8 w-17.5">
-							<SelectValue placeholder={pagination.pageSize} />
+							<SelectValue placeholder={pagination.limit} />
 						</SelectTrigger>
 						<SelectContent side="top">
-							{PAGE_SIZE_OPTIONS.map(pageSize => (
-								<SelectItem key={pageSize} value={`${pageSize}`}>
-									{pageSize}
+							{PAGE_SIZE_OPTIONS.map(limit => (
+								<SelectItem key={limit} value={`${limit}`}>
+									{limit}
 								</SelectItem>
 							))}
 						</SelectContent>

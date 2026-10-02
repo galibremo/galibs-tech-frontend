@@ -4,7 +4,7 @@ import { userSortDirectionValues, userSortValues } from "@/features/users/types/
 
 export const userSearchParams = {
 	page: parseAsInteger.withDefault(1),
-	pageSize: parseAsInteger.withDefault(10),
+	limit: parseAsInteger.withDefault(10),
 	search: parseAsString.withDefault(""),
 	role: parseAsString.withDefault(""),
 	emailVerified: parseAsString.withDefault(""),

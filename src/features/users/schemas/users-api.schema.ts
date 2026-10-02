@@ -54,7 +54,7 @@ const pageQuerySchema = z
 	.catch(1)
 	.default(1);
 
-const pageSizeQuerySchema = z
+const limitQuerySchema = z
 	.preprocess(firstSearchParamValue, z.coerce.number().int().min(1).max(100))
 	.optional()
 	.catch(10)
@@ -75,7 +75,7 @@ const directionQuerySchema = z
 export const userListQuerySchema = z
 	.object({
 		page: pageQuerySchema,
-		pageSize: pageSizeQuerySchema,
+		limit: limitQuerySchema,
 		search: optionalTrimmedStringSchema,
 		role: roleQuerySchema,
 		emailVerified: emailVerifiedQuerySchema,
@@ -93,7 +93,7 @@ export function createUserListQuery(input?: unknown): UserListQuery {
 
 	return {
 		page: query.page,
-		pageSize: query.pageSize,
+		limit: query.limit,
 		search: query.search,
 		role: query.role,
 		emailVerified: query.emailVerified,

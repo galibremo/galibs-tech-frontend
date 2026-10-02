@@ -13,7 +13,7 @@ export async function listEmailTemplates(
 ): Promise<EmailTemplateListResponse> {
   const params: Record<string, string | undefined> = {
     page: String(filters.page),
-    pageSize: String(filters.pageSize),
+    limit: String(filters.limit),
     sort: filters.sort,
     dir: filters.dir,
   };

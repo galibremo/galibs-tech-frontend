@@ -7,7 +7,7 @@ import {
 
 export const emailProviderSearchParams = {
 	page: parseAsInteger.withDefault(1),
-	pageSize: parseAsInteger.withDefault(10),
+	limit: parseAsInteger.withDefault(10),
 	search: parseAsString.withDefault(""),
 	providerType: parseAsString.withDefault(""),
 	isActive: parseAsString.withDefault(""),

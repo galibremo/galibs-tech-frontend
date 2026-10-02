@@ -7,7 +7,7 @@ import {
 
 export const emailTemplateSearchParams = {
 	page: parseAsInteger.withDefault(1),
-	pageSize: parseAsInteger.withDefault(10),
+	limit: parseAsInteger.withDefault(10),
 	search: parseAsString.withDefault(""),
 	isActive: parseAsString.withDefault(""),
 	fromDate: parseAsString.withDefault(""),

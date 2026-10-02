@@ -14,7 +14,7 @@ export interface EmailTemplateListResponse {
 	rows: EmailTemplate[];
 	total: number;
 	page: number;
-	pageSize: number;
+	limit: number;
 }
 
 export const emailTemplateSortValues = [
@@ -32,7 +32,7 @@ export type EmailTemplateSortDirection = (typeof emailTemplateSortDirectionValue
 
 export interface EmailTemplateListQuery {
 	page: number;
-	pageSize: number;
+	limit: number;
 	search?: string;
 	isActive?: string;
 	fromDate?: string;

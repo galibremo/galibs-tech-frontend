@@ -7,7 +7,7 @@ import {
 
 export const sessionSearchParams = {
 	page: parseAsInteger.withDefault(1),
-	pageSize: parseAsInteger.withDefault(10),
+	limit: parseAsInteger.withDefault(10),
 	search: parseAsString.withDefault(""),
 	status: parseAsString.withDefault(""),
 	deviceType: parseAsString.withDefault(""),

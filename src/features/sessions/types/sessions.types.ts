@@ -35,7 +35,7 @@ export type SessionListResponse = PaginatedData<Session> & {
 
 export interface SessionListQuery {
 	page: number;
-	pageSize: number;
+	limit: number;
 	search?: string;
 	status?: string;
 	deviceType?: string;

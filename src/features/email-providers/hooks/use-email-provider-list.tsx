@@ -43,7 +43,7 @@ const defaultPagination: EmailProviderListResponse = {
 	rows: [],
 	total: 0,
 	page: 1,
-	pageSize: 10
+	limit: 10
 };
 const sortableEmailProviderColumns = new Set<string>(emailProviderSortValues);
 const EmailProviderListContext = createContext<EmailProviderListContextValue | null>(null);
@@ -55,7 +55,7 @@ export function EmailProviderListProvider({ children }: EmailProviderListProvide
 	const filters = useMemo<EmailProviderListQuery>(
 		() => ({
 			page: params.page,
-			pageSize: params.pageSize,
+			limit: params.limit,
 			search: params.search || undefined,
 			providerType: params.providerType || undefined,
 			isActive: params.isActive || undefined,
@@ -69,7 +69,7 @@ export function EmailProviderListProvider({ children }: EmailProviderListProvide
 			params.fromDate,
 			params.isActive,
 			params.page,
-			params.pageSize,
+			params.limit,
 			params.providerType,
 			params.search,
 			params.sort,
@@ -89,7 +89,7 @@ export function EmailProviderListProvider({ children }: EmailProviderListProvide
 	} = useResourceListHandlers({
 		setParams: values => setParams(values as Parameters<typeof setParams>[0]),
 		sortableColumns: sortableEmailProviderColumns,
-		defaultPageSize: defaultPagination.pageSize,
+		defaultLimit: defaultPagination.limit,
 		refreshLabel: "providers",
 		refetch: () => providersQuery.refetch(),
 		resetExtras: { providerType: null, isActive: null, fromDate: null, toDate: null }
@@ -109,7 +109,7 @@ export function EmailProviderListProvider({ children }: EmailProviderListProvide
 				rows: pagination.rows,
 				total: pagination.total,
 				page: pagination.page,
-				pageSize: pagination.pageSize
+				limit: pagination.limit
 			},
 			isLoading: providersQuery.isLoading,
 			isFetching: providersQuery.isFetching,
@@ -138,7 +138,7 @@ export function EmailProviderListProvider({ children }: EmailProviderListProvide
 			handleSearchChange,
 			handleSorting,
 			pagination.page,
-			pagination.pageSize,
+			pagination.limit,
 			pagination.rows,
 			pagination.total,
 			params.dir,

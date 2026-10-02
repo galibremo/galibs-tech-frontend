@@ -29,7 +29,7 @@ export type UserListResponse = PaginatedData<ManagedUser>;
 
 export interface UserListQuery {
 	page: number;
-	pageSize: number;
+	limit: number;
 	search?: string;
 	role?: string;
 	emailVerified?: string;

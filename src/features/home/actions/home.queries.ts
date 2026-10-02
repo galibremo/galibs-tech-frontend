@@ -10,7 +10,7 @@ export function useCategoriesTreeQuery() {
   });
 }
 
-export function useCategoriesListQuery(params?: { page?: number; pageSize?: number }) {
+export function useCategoriesListQuery(params?: { page?: number; limit?: number }) {
   return useQuery({
     queryKey: categoriesListKeys.list(params),
     queryFn: () => categoriesList(params),
@@ -24,14 +24,14 @@ export function usePromotionalDataQuery() {
   });
 }
 
-export function useFeaturedProductsQuery(params?: { pageSize?: number }) {
+export function useFeaturedProductsQuery(params?: { limit?: number }) {
   return useQuery({
     queryKey: featuredProductsKeys.list(params),
     queryFn: () => featuredProducts(params),
   });
 }
 
-export function useNewArrivalProductsQuery(params?: { pageSize?: number }) {
+export function useNewArrivalProductsQuery(params?: { limit?: number }) {
   return useQuery({
     queryKey: newArrivalProductsKeys.list(params),
     queryFn: () => newArrivalProducts(params),
@@ -40,7 +40,7 @@ export function useNewArrivalProductsQuery(params?: { pageSize?: number }) {
 
 export function useBrandsListQuery(params?: {
   page?: number;
-  pageSize?: number;
+  limit?: number;
   isFeatured?: boolean;
   isActive?: boolean;
 }) {

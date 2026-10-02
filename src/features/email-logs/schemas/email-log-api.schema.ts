@@ -31,8 +31,8 @@ const pageQuerySchema = z
 	.catch(1)
 	.default(1);
 
-const pageSizeQuerySchema = z
-	.preprocess(firstSearchParamValue, validateNumber("Page Size", { min: 1, int: true }).max(100))
+const limitQuerySchema = z
+	.preprocess(firstSearchParamValue, validateNumber("Limit", { min: 1, int: true }).max(100))
 	.optional()
 	.catch(10)
 	.default(10);
@@ -58,7 +58,7 @@ const emailLogStatusQuerySchema = z
 export const emailLogListQuerySchema = z
 	.object({
 		page: pageQuerySchema,
-		pageSize: pageSizeQuerySchema,
+		limit: limitQuerySchema,
 		providerId: optionalTrimmedStringSchema,
 		toEmail: optionalTrimmedStringSchema,
 		status: emailLogStatusQuerySchema,
@@ -77,7 +77,7 @@ export function createEmailLogListQuery(input: unknown): EmailLogListQuery {
 
 	return {
 		page: query.page,
-		pageSize: query.pageSize,
+		limit: query.limit,
 		providerId: query.providerId,
 		toEmail: query.toEmail,
 		status: query.status as EmailLogStatus | undefined,

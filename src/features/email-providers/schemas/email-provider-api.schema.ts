@@ -30,8 +30,8 @@ const pageQuerySchema = z
 	.catch(1)
 	.default(1);
 
-const pageSizeQuerySchema = z
-	.preprocess(firstSearchParamValue, validateNumber("Page Size", { min: 1, int: true }).max(100))
+const limitQuerySchema = z
+	.preprocess(firstSearchParamValue, validateNumber("Limit", { min: 1, int: true }).max(100))
 	.optional()
 	.catch(10)
 	.default(10);
@@ -51,7 +51,7 @@ const directionQuerySchema = z
 export const emailProviderListQuerySchema = z
 	.object({
 		page: pageQuerySchema,
-		pageSize: pageSizeQuerySchema,
+		limit: limitQuerySchema,
 		search: optionalTrimmedStringSchema,
 		providerType: optionalTrimmedStringSchema,
 		isActive: optionalTrimmedStringSchema,
@@ -69,7 +69,7 @@ export function createEmailProviderListQuery(input: unknown): EmailProviderListQ
 
 	return {
 		page: query.page,
-		pageSize: query.pageSize,
+		limit: query.limit,
 		search: query.search,
 		providerType: query.providerType,
 		isActive: query.isActive,

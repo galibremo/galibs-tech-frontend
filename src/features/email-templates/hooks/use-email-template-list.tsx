@@ -42,7 +42,7 @@ const defaultPagination: EmailTemplateListResponse = {
 	rows: [],
 	total: 0,
 	page: 1,
-	pageSize: 10
+	limit: 10
 };
 const sortableEmailTemplateColumns = new Set<string>(emailTemplateSortValues);
 const EmailTemplateListContext = createContext<EmailTemplateListContextValue | null>(null);
@@ -55,7 +55,7 @@ export function EmailTemplateListProvider({ children }: EmailTemplateListProvide
 	const filters = useMemo<EmailTemplateListQuery>(
 		() => ({
 			page: params.page,
-			pageSize: params.pageSize,
+			limit: params.limit,
 			search: params.search || undefined,
 			isActive: params.isActive || undefined,
 			fromDate: params.fromDate || undefined,
@@ -65,7 +65,7 @@ export function EmailTemplateListProvider({ children }: EmailTemplateListProvide
 		}),
 		[
 			params.page,
-			params.pageSize,
+			params.limit,
 			params.search,
 			params.isActive,
 			params.fromDate,
@@ -88,7 +88,7 @@ export function EmailTemplateListProvider({ children }: EmailTemplateListProvide
 	} = useResourceListHandlers({
 		setParams: values => setParams(values as Parameters<typeof setParams>[0]),
 		sortableColumns: sortableEmailTemplateColumns,
-		defaultPageSize: defaultPagination.pageSize,
+		defaultLimit: defaultPagination.limit,
 		refreshLabel: "templates",
 		refetch: () => templatesQuery.refetch(),
 		resetExtras: { isActive: null, fromDate: null, toDate: null }
@@ -108,7 +108,7 @@ export function EmailTemplateListProvider({ children }: EmailTemplateListProvide
 				rows: pagination.rows,
 				total: pagination.total,
 				page: pagination.page,
-				pageSize: pagination.pageSize
+				limit: pagination.limit
 			},
 			isLoading: templatesQuery.isLoading,
 			isFetching: templatesQuery.isFetching,
@@ -136,7 +136,7 @@ export function EmailTemplateListProvider({ children }: EmailTemplateListProvide
 			handleSearchChange,
 			handleSorting,
 			pagination.page,
-			pagination.pageSize,
+			pagination.limit,
 			pagination.rows,
 			pagination.total,
 			params.dir,

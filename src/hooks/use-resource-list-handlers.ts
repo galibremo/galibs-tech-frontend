@@ -10,7 +10,7 @@ type SetParams = (
 type UseResourceListHandlersOptions = {
   setParams: SetParams;
   sortableColumns: Set<string>;
-  defaultPageSize?: number;
+  defaultLimit?: number;
   defaultSort?: string;
   defaultDir?: string;
   refreshLabel: string;
@@ -26,7 +26,7 @@ type UseResourceListHandlersOptions = {
 export function useResourceListHandlers({
   setParams,
   sortableColumns,
-  defaultPageSize = 10,
+  defaultLimit = 10,
   defaultSort = "createdAt",
   defaultDir = "desc",
   refreshLabel,
@@ -50,15 +50,15 @@ export function useResourceListHandlers({
         return;
       }
 
-      if (key === "limit" || key === "pageSize") {
+      if (key === "limit" || key === "limit") {
         void setParams({
-          pageSize: Number(normalizedValue) || defaultPageSize,
+          limit: Number(normalizedValue) || defaultLimit,
           page: 1,
         });
         return;
       }
     },
-    [defaultPageSize, setParams],
+    [defaultLimit, setParams],
   );
 
   const handleSearchChange = useCallback(
@@ -89,13 +89,13 @@ export function useResourceListHandlers({
   const handleResetAll = useCallback(() => {
     void setParams({
       page: 1,
-      pageSize: defaultPageSize,
+      limit: defaultLimit,
       search: null,
       sort: defaultSort,
       dir: defaultDir,
       ...resetExtras,
     });
-  }, [defaultDir, defaultPageSize, defaultSort, resetExtras, setParams]);
+  }, [defaultDir, defaultLimit, defaultSort, resetExtras, setParams]);
 
   const handleRefresh = useCallback(() => {
     void toast.promise(refetch(), {

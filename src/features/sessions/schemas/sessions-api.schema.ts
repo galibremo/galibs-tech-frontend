@@ -47,8 +47,8 @@ const pageQuerySchema = z
 	.catch(1)
 	.default(1);
 
-const pageSizeQuerySchema = z
-	.preprocess(firstSearchParamValue, validateNumber("Page Size", { min: 1, int: true }).max(100))
+const limitQuerySchema = z
+	.preprocess(firstSearchParamValue, validateNumber("Limit", { min: 1, int: true }).max(100))
 	.optional()
 	.catch(10)
 	.default(10);
@@ -68,7 +68,7 @@ const directionQuerySchema = z
 export const sessionListQuerySchema = z
 	.object({
 		page: pageQuerySchema,
-		pageSize: pageSizeQuerySchema,
+		limit: limitQuerySchema,
 		search: optionalTrimmedStringSchema,
 		status: statusQuerySchema,
 		deviceType: csvQuerySchema,
@@ -86,7 +86,7 @@ export function createSessionListQuery(input: unknown): SessionListQuery {
 
 	return {
 		page: query.page,
-		pageSize: query.pageSize,
+		limit: query.limit,
 		search: query.search,
 		status: query.status,
 		deviceType: query.deviceType,

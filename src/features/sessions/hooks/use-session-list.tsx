@@ -44,7 +44,7 @@ const defaultPagination: SessionListResponse = {
 	rows: [],
 	total: 0,
 	page: 1,
-	pageSize: 10,
+	limit: 10,
 	activeOtherSessionCount: 0
 };
 const sortableSessionColumns = new Set<string>(sessionSortValues);
@@ -57,7 +57,7 @@ export function SessionListProvider({ children }: SessionListProviderProps) {
 	const filters = useMemo<SessionListQuery>(
 		() => ({
 			page: params.page,
-			pageSize: params.pageSize,
+			limit: params.limit,
 			search: params.search || undefined,
 			status: params.status || undefined,
 			deviceType: params.deviceType || undefined,
@@ -71,7 +71,7 @@ export function SessionListProvider({ children }: SessionListProviderProps) {
 			params.dir,
 			params.fromDate,
 			params.page,
-			params.pageSize,
+			params.limit,
 			params.search,
 			params.sort,
 			params.status,
@@ -91,7 +91,7 @@ export function SessionListProvider({ children }: SessionListProviderProps) {
 	} = useResourceListHandlers({
 		setParams,
 		sortableColumns: sortableSessionColumns,
-		defaultPageSize: defaultPagination.pageSize,
+		defaultLimit: defaultPagination.limit,
 		defaultSort: "createdAt",
 		defaultDir: "desc",
 		refreshLabel: "sessions",
@@ -113,7 +113,7 @@ export function SessionListProvider({ children }: SessionListProviderProps) {
 				rows: pagination.rows,
 				total: pagination.total,
 				page: pagination.page,
-				pageSize: pagination.pageSize
+				limit: pagination.limit
 			},
 			isLoading: sessionsQuery.isLoading,
 			isFetching: sessionsQuery.isFetching,
@@ -144,7 +144,7 @@ export function SessionListProvider({ children }: SessionListProviderProps) {
 			handleSorting,
 			pagination.activeOtherSessionCount,
 			pagination.page,
-			pagination.pageSize,
+			pagination.limit,
 			pagination.rows,
 			pagination.total,
 			params.deviceType,

@@ -7,7 +7,7 @@ import {
 
 export const emailLogSearchParams = {
 	page: parseAsInteger.withDefault(1),
-	pageSize: parseAsInteger.withDefault(10),
+	limit: parseAsInteger.withDefault(10),
 	providerId: parseAsString.withDefault(""),
 	toEmail: parseAsString.withDefault(""),
 	status: parseAsString.withDefault(""),

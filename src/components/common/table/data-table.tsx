@@ -155,7 +155,7 @@ export function DataTable<TData, TValue>({
             {isLoading ? (
               <DataTableSkeletonRows
                 columnCount={visibleColumnCount}
-                rowCount={Math.min(pagination.pageSize || 6, 8)}
+                rowCount={Math.min(pagination.limit || 6, 8)}
               />
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

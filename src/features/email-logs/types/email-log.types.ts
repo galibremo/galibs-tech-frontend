@@ -24,7 +24,7 @@ export type EmailLogListResponse = PaginatedData<EmailLog>;
 
 export interface EmailLogListQuery {
 	page: number;
-	pageSize: number;
+	limit: number;
 	providerId?: string;
 	toEmail?: string;
 	status?: EmailLogStatus;

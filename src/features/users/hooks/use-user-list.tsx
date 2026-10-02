@@ -48,7 +48,7 @@ const defaultPagination: UserListResponse = {
   rows: [],
   total: 0,
   page: 1,
-  pageSize: 10,
+  limit: 10,
 };
 
 const sortableUserColumns = new Set<string>(userSortValues);
@@ -61,7 +61,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
   const filters = useMemo<UserListQuery>(
     () => ({
       page: params.page,
-      pageSize: params.pageSize,
+      limit: params.limit,
       search: params.search || undefined,
       role: params.role || undefined,
       emailVerified: params.emailVerified || undefined,
@@ -75,7 +75,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
       params.emailVerified,
       params.fromDate,
       params.page,
-      params.pageSize,
+      params.limit,
       params.role,
       params.search,
       params.sort,
@@ -95,7 +95,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
   } = useResourceListHandlers({
     setParams,
     sortableColumns: sortableUserColumns,
-    defaultPageSize: defaultPagination.pageSize,
+    defaultLimit: defaultPagination.limit,
     defaultSort: "createdAt",
     defaultDir: "desc",
     refreshLabel: "users",
@@ -122,7 +122,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
         rows: pagination.rows,
         total: pagination.total,
         page: pagination.page,
-        pageSize: pagination.pageSize,
+        limit: pagination.limit,
       },
       isLoading: usersQuery.isLoading,
       isFetching: usersQuery.isFetching,
@@ -151,7 +151,7 @@ export function UserListProvider({ children }: UserListProviderProps) {
       handleSearchChange,
       handleSorting,
       pagination.page,
-      pagination.pageSize,
+      pagination.limit,
       pagination.rows,
       pagination.total,
       params.dir,

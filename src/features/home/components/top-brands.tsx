@@ -16,7 +16,7 @@ import {
 
 export default function TopBrands() {
   const { data, isLoading } = useBrandsListQuery({
-    pageSize: 20,
+    limit: 20,
     isActive: true,
   });
 

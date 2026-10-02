@@ -78,7 +78,7 @@ export interface EmailProvider {
 
 export interface EmailProviderListQuery {
 	page: number;
-	pageSize: number;
+	limit: number;
 	search?: string;
 	providerType?: string;
 	isActive?: string;
@@ -92,7 +92,7 @@ export interface EmailProviderListResponse {
 	rows: EmailProvider[];
 	total: number;
 	page: number;
-	pageSize: number;
+	limit: number;
 }
 
 export interface CreateEmailProviderInput {

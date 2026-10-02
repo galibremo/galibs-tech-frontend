@@ -16,7 +16,7 @@ export async function categoriesTree(): Promise<CategoryTreeItem[]> {
   });
 }
 
-export async function categoriesList(params?: { page?: number; pageSize?: number }): Promise<CategoriesListResponse> {
+export async function categoriesList(params?: { page?: number; limit?: number }): Promise<CategoriesListResponse> {
   return fetchClient<CategoriesListResponse>({
     method: "GET",
     url: apiRoute.categories,
@@ -31,24 +31,24 @@ export async function promotionalData(): Promise<Promotional> {
   });
 }
 
-export async function featuredProducts(params?: { pageSize?: number }): Promise<FeaturedProductsListResponse> {
+export async function featuredProducts(params?: { limit?: number }): Promise<FeaturedProductsListResponse> {
   return fetchClient<FeaturedProductsListResponse>({
     method: "GET",
     url: apiRoute.products,
     params: {
       featured: true,
-      pageSize: 10,
+      limit: 10,
       ...params,
     },
   });
 }
 
-export async function newArrivalProducts(params?: { pageSize?: number }): Promise<ProductsListResponse> {
+export async function newArrivalProducts(params?: { limit?: number }): Promise<ProductsListResponse> {
   return fetchClient<ProductsListResponse>({
     method: "GET",
     url: apiRoute.products,
     params: {
-      pageSize: 10,
+      limit: 10,
       ...params,
     },
   });
@@ -56,7 +56,7 @@ export async function newArrivalProducts(params?: { pageSize?: number }): Promis
 
 export async function brandsList(params?: {
   page?: number;
-  pageSize?: number;
+  limit?: number;
   isFeatured?: boolean;
   isActive?: boolean;
 }): Promise<BrandsListResponse> {

@@ -11,7 +11,7 @@ import React from "react";
 
 export default function FeaturedCategories() {
   const { data: categoriesListData, isLoading: isListLoading } =
-    useCategoriesListQuery({ pageSize: 50 });
+    useCategoriesListQuery({ limit: 50 });
   const { data: categoriesTree, isLoading: isTreeLoading } =
     useCategoriesTreeQuery();
 
