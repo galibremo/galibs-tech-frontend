@@ -36,7 +36,7 @@ export function DataTablePagination<TData>({
 	const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 	useEffect(() => {
-		table.setLimit(pagination.limit);
+		table.setPageSize(pagination.limit);
 	}, [pagination.limit, table]);
 
 	const totalPages = Math.ceil(pagination.total / pagination.limit);
@@ -58,7 +58,7 @@ export function DataTablePagination<TData>({
 							value={`${pagination.limit}`}
 							onValueChange={value => {
 								handleOptionFilter("limit", value);
-								table.setLimit(Number(value));
+								table.setPageSize(Number(value));
 							}}
 						>
 							<SelectTrigger className="h-8 w-17.5">
@@ -144,7 +144,7 @@ export function DataTablePagination<TData>({
 						value={`${pagination.limit}`}
 						onValueChange={value => {
 							handleOptionFilter("limit", value);
-							table.setLimit(Number(value));
+							table.setPageSize(Number(value));
 						}}
 					>
 						<SelectTrigger className="h-8 w-17.5">

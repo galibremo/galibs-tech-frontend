@@ -23,7 +23,7 @@ interface PaginatedData<T> {
 	rows: T[];
 	total: number;
 	page: number;
-	pageSize: number;
+	limit: number;
 }
 
 type PaginatedApiResponse<T> = ApiResponse<PaginatedData<T>>;
