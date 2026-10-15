@@ -3,7 +3,10 @@
 import { useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Container } from "@/components/custom-ui/container";
-import { useAllProductsQuery } from "@/features/products/actions/product.queries";
+import {
+  useAllProductsQuery,
+  useBrandBySlugQuery,
+} from "@/features/products/actions/product.queries";
 import CatalogProductGrid from "@/features/catalog/components/catalog-product-grid";
 import CatalogPagination from "@/features/catalog/components/catalog-pagination";
 import {
@@ -23,16 +26,29 @@ export default function ProductsView() {
   const pageRaw = searchParams.get("page");
   const limitRaw = searchParams.get("limit");
   const searchRaw = searchParams.get("search");
+  const brandRaw = searchParams.get("brand");
 
   const page = pageRaw ? parseInt(pageRaw, 10) : 1;
   const limit = limitRaw ? parseInt(limitRaw, 10) : 20;
   const search = searchRaw || undefined;
+  const brandSlug = brandRaw || undefined;
 
   const { data: productsData, isLoading } = useAllProductsQuery({
     page: isNaN(page) ? 1 : page,
     limit: isNaN(limit) ? 20 : limit,
     search,
+    brand: brandSlug,
   });
+
+  const { data: brand, isError: brandNotFound } = useBrandBySlugQuery(brandSlug);
+
+  // Heading: brand name when filtering by brand (slug while it loads),
+  // the search term when searching, otherwise "All Products".
+  const brandLabel = brandSlug
+    ? brandNotFound
+      ? `Unknown brand "${brandSlug}"`
+      : (brand?.name ?? brandSlug)
+    : null;
 
   const products = productsData?.rows || [];
   const totalProducts = productsData?.total || 0;
@@ -68,12 +84,22 @@ export default function ProductsView() {
         {/* Top Bar */}
         <div className="flex items-center justify-between bg-card border border-border rounded-lg p-3 sm:p-4 shadow-sm">
           <div className="font-medium text-foreground text-sm sm:text-base">
-            {search ? (
-              <span>
+            {brandLabel ? (
+              <h1 className="inline">
+                <span className="font-bold">{brandLabel}</span>
+                {search && (
+                  <span>
+                    {" "}
+                    - Search: <span className="font-bold">{search}</span>
+                  </span>
+                )}
+              </h1>
+            ) : search ? (
+              <h1 className="inline">
                 Search - <span className="font-bold">{search}</span>
-              </span>
+              </h1>
             ) : (
-              <span className="font-bold">All Products</span>
+              <h1 className="inline font-bold">All Products</h1>
             )}
           </div>
 

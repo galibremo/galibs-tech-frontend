@@ -1,5 +1,6 @@
 import { fetchClient } from "@/lib/api/client";
 import { apiRoute } from "@/routes/routes";
+import type { Brand } from "@/features/home/types/home.types";
 import type { ProductDetails, SpecGroup, ProductListResponse, ProductListQueryParams } from "../types/product.types";
 
 export async function getAllProducts(query?: ProductListQueryParams): Promise<ProductListResponse> {
@@ -7,11 +8,19 @@ export async function getAllProducts(query?: ProductListQueryParams): Promise<Pr
   if (query?.page && query.page > 1) params.page = query.page;
   if (query?.limit) params.limit = query.limit;
   if (query?.search) params.search = query.search;
+  if (query?.brand) params.brand = query.brand;
 
   return fetchClient<ProductListResponse>({
     method: "GET",
     url: apiRoute.products,
     params,
+  });
+}
+
+export async function getBrandBySlug(slug: string): Promise<Brand> {
+  return fetchClient<Brand>({
+    method: "GET",
+    url: apiRoute.brandBySlug(slug),
   });
 }
 

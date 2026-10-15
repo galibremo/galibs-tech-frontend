@@ -3,4 +3,5 @@ export const productKeys = {
   list: (filters: Record<string, any>) => [...productKeys.all, "list", filters] as const,
   detail: (slug: string) => [...productKeys.all, "detail", slug] as const,
   specs: (id: string) => [...productKeys.all, "specs", id] as const,
+  brand: (slug: string) => ["brands", "detail", slug] as const,
 };

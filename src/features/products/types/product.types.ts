@@ -104,6 +104,8 @@ export interface ProductListQueryParams {
   page?: number;
   limit?: number;
   search?: string;
+  /** Brand slug, e.g. "acer". */
+  brand?: string;
 }
 
 export interface ProductListResponse {
