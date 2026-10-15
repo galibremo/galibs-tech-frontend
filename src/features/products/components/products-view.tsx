@@ -27,6 +27,7 @@ export default function ProductsView() {
   const limitRaw = searchParams.get("limit");
   const searchRaw = searchParams.get("search");
   const brandRaw = searchParams.get("brand");
+  const featured = searchParams.get("featured") === "true";
 
   const page = pageRaw ? parseInt(pageRaw, 10) : 1;
   const limit = limitRaw ? parseInt(limitRaw, 10) : 20;
@@ -38,6 +39,7 @@ export default function ProductsView() {
     limit: isNaN(limit) ? 20 : limit,
     search,
     brand: brandSlug,
+    featured,
   });
 
   const { data: brand, isError: brandNotFound } = useBrandBySlugQuery(brandSlug);
@@ -98,6 +100,8 @@ export default function ProductsView() {
               <h1 className="inline">
                 Search - <span className="font-bold">{search}</span>
               </h1>
+            ) : featured ? (
+              <h1 className="inline font-bold">Featured Products</h1>
             ) : (
               <h1 className="inline font-bold">All Products</h1>
             )}

@@ -106,6 +106,8 @@ export interface ProductListQueryParams {
   search?: string;
   /** Brand slug, e.g. "acer". */
   brand?: string;
+  /** Only featured products (the backend returns the lighter card shape). */
+  featured?: boolean;
 }
 
 export interface ProductListResponse {

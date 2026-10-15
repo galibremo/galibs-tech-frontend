@@ -68,6 +68,7 @@ export const apiRoute = {
   brandBySlug: (slug: string) => `/brands/slug/${slug}`,
 
   promotional: "/promotional",
+  newsletterSubscribe: "/newsletter/subscribe",
   products: "/products",
   productBySlug: (slug: string) => `/products/${slug}`,
   productSpecs: (id: string) => `/products/${id}/specifications`,

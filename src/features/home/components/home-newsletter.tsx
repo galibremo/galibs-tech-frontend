@@ -6,16 +6,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Mail01Icon, Send } from "@hugeicons/core-free-icons";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { subscribeToNewsletter } from "../actions/newsletter.actions";
 
 export default function HomeNewsletter() {
   const [email, setEmail] = React.useState("");
 
+  const subscribe = useMutation({
+    mutationFn: (address: string) => subscribeToNewsletter(address),
+    onSuccess: (result) => {
+      toast.success(
+        result.isNew
+          ? "You're subscribed! Watch your inbox for deals."
+          : "You're already on the list.",
+      );
+      setEmail("");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Could not subscribe. Please try again.");
+    },
+  });
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      // Logic for newsletter subscription
-      setEmail("");
-    }
+    const address = email.trim();
+    if (!address || subscribe.isPending) return;
+    subscribe.mutate(address);
   };
 
   return (
@@ -48,11 +65,17 @@ export default function HomeNewsletter() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={subscribe.isPending}
+                    aria-label="Email address"
                     className="pl-9 bg-background ring-0!"
                   />
                 </div>
-                <Button type="submit" className="shrink-0 cursor-pointer">
-                  Subscribe
+                <Button
+                  type="submit"
+                  disabled={subscribe.isPending}
+                  className="shrink-0 cursor-pointer"
+                >
+                  {subscribe.isPending ? "Subscribing…" : "Subscribe"}
                   <HugeiconsIcon icon={Send} className="ml-1 w-4 h-4" />
                 </Button>
               </form>

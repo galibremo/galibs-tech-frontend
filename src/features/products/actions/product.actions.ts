@@ -9,6 +9,7 @@ export async function getAllProducts(query?: ProductListQueryParams): Promise<Pr
   if (query?.limit) params.limit = query.limit;
   if (query?.search) params.search = query.search;
   if (query?.brand) params.brand = query.brand;
+  if (query?.featured) params.featured = "true";
 
   return fetchClient<ProductListResponse>({
     method: "GET",

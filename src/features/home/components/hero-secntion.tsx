@@ -10,12 +10,14 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export default function HeroSection() {
-  const { data: promotionalData } = usePromotionalDataQuery();
+  const { data: promotionalData, isLoading } = usePromotionalDataQuery();
   const heroSectionData = promotionalData?.heroSlides;
   const offerSEctionData = promotionalData?.offers;
+  const hasSlides = !!heroSectionData && heroSectionData.length > 0;
 
   const [api, setApi] = React.useState<CarouselApi>();
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -57,29 +59,64 @@ export default function HeroSection() {
     <div ref={containerRef}>
       <Container className="p-3 sm:p-4.5 lg:p-6 xl:py-8">
         <div className="flex flex-col lg:flex-row gap-3 sm:gap-4.5 lg:gap-6">
-          <Carousel
-            opts={{ loop: true }}
-            setApi={setApi}
-            className="w-full lg:w-[75%]"
-          >
-            <CarouselContent>
-              {heroSectionData?.map((slides, index) => (
-                <CarouselItem key={index}>
-                  <div className="relative aspect-video rounded-lg p-1">
-                    <Image
-                      src={slides.imageUrl}
-                      alt={slides.altText || "hero slide image"}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 75vw"
-                      priority={index === 0}
-                      className="rounded-lg object-cover object-center"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselDots />
-          </Carousel>
+          {isLoading ? (
+            // Loading: keep the slot's size so the page doesn't jump.
+            <div
+              className="w-full lg:w-[75%] aspect-video rounded-lg bg-muted animate-pulse"
+              aria-busy="true"
+              aria-label="Loading promotions"
+            />
+          ) : !hasSlides ? (
+            // Empty: no active slides configured (or the request failed).
+            <div className="w-full lg:w-[75%] aspect-video rounded-lg bg-muted/60 border border-dashed border-border flex items-center justify-center text-sm text-muted-foreground">
+              No promotions right now
+            </div>
+          ) : (
+            <Carousel
+              opts={{ loop: true }}
+              setApi={setApi}
+              className="w-full lg:w-[75%]"
+            >
+              <CarouselContent>
+                {heroSectionData.map((slide, index) => {
+                  const image = (
+                    <div className="relative aspect-video rounded-lg p-1">
+                      <Image
+                        src={slide.imageUrl}
+                        alt={slide.altText || slide.title || "hero slide image"}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 75vw"
+                        priority={index === 0}
+                        className="rounded-lg object-cover object-center"
+                      />
+                    </div>
+                  );
+                  const isExternal = /^https?:\/\//i.test(slide.linkUrl ?? "");
+                  const target =
+                    slide.linkTarget === "_blank" || isExternal ? "_blank" : undefined;
+
+                  return (
+                    <CarouselItem key={slide.id ?? index}>
+                      {slide.linkUrl ? (
+                        <Link
+                          href={slide.linkUrl}
+                          target={target}
+                          rel={target === "_blank" ? "noopener noreferrer" : undefined}
+                          aria-label={slide.title || slide.altText || "Open promotion"}
+                          className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+                        >
+                          {image}
+                        </Link>
+                      ) : (
+                        image
+                      )}
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <CarouselDots />
+            </Carousel>
+          )}
           <div className="flex flex-row lg:flex-col items-center gap-3 sm:gap-4.5 lg:gap-6 w-full lg:w-[25%]">
             {[0, 1].map((index) => {
               const offer = offerSEctionData?.[index];
