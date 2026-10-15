@@ -12,6 +12,26 @@ import {
 
 const CART_STORAGE_KEY = "ecommerce_cart";
 
+/** Line key: one line per product, or per variant for variable products. */
+export function cartLineId(productId: string, variantId?: string | null): string {
+  return variantId ? `${productId}:${variantId}` : productId;
+}
+
+/**
+ * Items saved before `productId`/`variantId` existed only had `id` (= product
+ * id). Backfill so checkout can still send them.
+ */
+function normalizeStoredItems(raw: unknown): CartItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((item): item is CartItem => !!item && typeof item.id === "string")
+    .map((item) => ({
+      ...item,
+      productId: item.productId ?? item.id,
+      variantId: item.variantId ?? null,
+    }));
+}
+
 export default function CartProvider({
   children,
 }: {
@@ -26,7 +46,7 @@ export default function CartProvider({
     try {
       const storedCart = localStorage.getItem(CART_STORAGE_KEY);
       if (storedCart) {
-        setItems(JSON.parse(storedCart));
+        setItems(normalizeStoredItems(JSON.parse(storedCart)));
       }
     } catch (error) {
       console.error("Failed to parse cart from localStorage:", error);
@@ -51,7 +71,8 @@ export default function CartProvider({
       await clearBackendCart();
       for (const item of items) {
         await addBackendCartItem({
-          productId: item.id,
+          productId: item.productId,
+          variantId: item.variantId ?? null,
           quantity: item.quantity,
         });
       }
@@ -61,11 +82,11 @@ export default function CartProvider({
   }, [items]);
 
   const addToCart = useCallback(
-    (product: Omit<CartItem, "quantity">, quantityToAdd: number = 1) => {
+    (product: Omit<CartItem, "quantity" | "id">, quantityToAdd: number = 1) => {
+      const lineId = cartLineId(product.productId, product.variantId);
+
       setItems((prevItems) => {
-        const existingIndex = prevItems.findIndex(
-          (item) => item.id === product.id,
-        );
+        const existingIndex = prevItems.findIndex((item) => item.id === lineId);
         if (existingIndex > -1) {
           const updated = [...prevItems];
           updated[existingIndex] = {
@@ -74,17 +95,24 @@ export default function CartProvider({
           };
           return updated;
         } else {
-          return [...prevItems, { ...product, quantity: quantityToAdd }];
+          return [
+            ...prevItems,
+            { ...product, id: lineId, quantity: quantityToAdd },
+          ];
         }
       });
 
       // Background sync to backend cart
       addBackendCartItem({
-        productId: product.id,
+        productId: product.productId,
+        variantId: product.variantId ?? null,
         quantity: quantityToAdd,
       }).catch((err) => console.error("Error adding item to backend cart:", err));
 
-      toast.success(`${product.name} added to cart`);
+      const label = product.variantTitle
+        ? `${product.name} (${product.variantTitle})`
+        : product.name;
+      toast.success(`${label} added to cart`);
     },
     [],
   );

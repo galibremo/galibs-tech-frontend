@@ -75,6 +75,7 @@ export interface FeaturedProduct {
   id: string;
   name: string;
   slug: string;
+  type?: "SIMPLE" | "VARIABLE";
   thumbnailUrl: string | null;
   price: number;
   regularPrice: number | null;
@@ -96,6 +97,7 @@ export interface ProductItem {
   id: string;
   name: string;
   slug: string;
+  type?: "SIMPLE" | "VARIABLE";
   thumbnailUrl: string | null;
   price: number;
   regularPrice: number | null;

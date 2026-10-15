@@ -20,8 +20,7 @@ export default function CatalogPagination({
 }: CatalogPaginationProps) {
   const totalPages = Math.ceil(totalItems / limit);
 
-  if (totalPages <= 1) return null;
-
+  // Hooks must run on every render, so this stays above the early return below.
   const pageNumbers = React.useMemo(() => {
     const pages: (number | "...")[] = [];
     const maxVisible = 5;
@@ -44,6 +43,8 @@ export default function CatalogPagination({
 
     return pages;
   }, [totalPages, currentPage]);
+
+  if (totalPages <= 1) return null;
 
   return (
     <div className="flex items-center justify-center space-x-1.5 py-6">

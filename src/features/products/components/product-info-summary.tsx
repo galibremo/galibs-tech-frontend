@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -21,15 +21,79 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { route } from "@/routes/routes";
 import type { ProductDetails } from "../types/product.types";
+import {
+  ProductVariantSelector,
+  findVariantForSelection,
+  pickInitialVariant,
+  selectionFromVariant,
+  type VariantSelection,
+} from "./product-variant-selector";
 
 interface ProductInfoSummaryProps {
   product: ProductDetails;
 }
 
+const AVAILABILITY_LABEL: Record<ProductDetails["availability"], string> = {
+  IN_STOCK: "In Stock",
+  LOW_STOCK: "Low Stock",
+  OUT_OF_STOCK: "Out of Stock",
+  PRE_ORDER: "Pre-Order",
+  UPCOMING: "Upcoming",
+};
+
 export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
   const router = useRouter();
-  const { addToCart, setIsOpen } = useCart();
+  const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+
+  // --- Variants -----------------------------------------------------------
+  const isVariable = product.type === "VARIABLE";
+  const optionGroups = useMemo(
+    () => (isVariable ? (product.optionGroups ?? []) : []),
+    [isVariable, product.optionGroups],
+  );
+  const variants = useMemo(
+    () => (isVariable ? (product.variants ?? []) : []),
+    [isVariable, product.variants],
+  );
+
+  const [selection, setSelection] = useState<VariantSelection>(() => {
+    const initial = pickInitialVariant(variants);
+    return initial ? selectionFromVariant(initial, optionGroups) : {};
+  });
+
+  const selectedVariant = useMemo(
+    () =>
+      isVariable
+        ? findVariantForSelection(variants, optionGroups, selection)
+        : null,
+    [isVariable, variants, optionGroups, selection],
+  );
+
+  // What the shopper is actually buying: the chosen variant, or the product itself.
+  const purchasable = useMemo(
+    () =>
+      isVariable
+        ? selectedVariant
+          ? {
+              price: selectedVariant.price,
+              regularPrice: selectedVariant.regularPrice,
+              availability: selectedVariant.availability,
+              thumbnailUrl: selectedVariant.thumbnailUrl ?? product.thumbnailUrl,
+            }
+          : null
+        : {
+            price: product.price,
+            regularPrice: product.regularPrice,
+            availability: product.availability,
+            thumbnailUrl: product.thumbnailUrl,
+          },
+    [isVariable, selectedVariant, product],
+  );
+
+  const needsVariant = isVariable && !selectedVariant;
+  const isOutOfStock = purchasable?.availability === "OUT_OF_STOCK";
+  const canPurchase = !needsVariant && !isOutOfStock;
 
   const scrollToSpecs = () => {
     const element = document.getElementById("specification");
@@ -41,45 +105,60 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
     }
   };
 
+  // Price shown: the selected variant's, falling back to the product's base
+  // price (the cheapest variant) while no variant is selected.
+  const displayPrice = purchasable?.price ?? product.price;
+  const displayRegularPrice = purchasable
+    ? purchasable.regularPrice
+    : product.regularPrice;
+  const displayAvailability = purchasable?.availability ?? product.availability;
+
   const saveAmount =
-    product.regularPrice && product.regularPrice > product.price
-      ? product.regularPrice - product.price
+    displayRegularPrice && displayRegularPrice > displayPrice
+      ? displayRegularPrice - displayPrice
       : null;
 
   const savePercent =
-    product.regularPrice && product.regularPrice > product.price
+    displayRegularPrice && displayRegularPrice > displayPrice
       ? Math.round(
-          ((product.regularPrice - product.price) / product.regularPrice) * 100,
+          ((displayRegularPrice - displayPrice) / displayRegularPrice) * 100,
         )
       : null;
 
-  const handleAddToCart = () => {
+  // Variant titles from the backend are "<product name> - <options>"; the cart
+  // already shows the product name, so keep only the options part.
+  const variantLabel = selectedVariant
+    ? selectedVariant.title.startsWith(product.name)
+      ? selectedVariant.title.slice(product.name.length).replace(/^\s*-\s*/, "")
+      : selectedVariant.title
+    : null;
+
+  const addCurrentSelectionToCart = (): boolean => {
+    if (!purchasable) return false;
     addToCart(
       {
-        id: product.id,
+        productId: product.id,
+        variantId: selectedVariant?.id ?? null,
+        variantTitle: variantLabel || null,
         name: product.name,
         slug: product.slug,
-        price: product.price,
-        regularPrice: product.regularPrice,
-        thumbnailUrl: product.thumbnailUrl,
+        price: purchasable.price,
+        regularPrice: purchasable.regularPrice,
+        thumbnailUrl: purchasable.thumbnailUrl,
       },
       quantity,
     );
+    return true;
+  };
+
+  const handleAddToCart = () => {
+    addCurrentSelectionToCart();
   };
 
   const handleBuyNow = () => {
-    addToCart(
-      {
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        price: product.price,
-        regularPrice: product.regularPrice,
-        thumbnailUrl: product.thumbnailUrl,
-      },
-      quantity,
-    );
-    router.push(route.public.cart);
+    if (addCurrentSelectionToCart()) {
+      router.push(route.public.cart);
+    }
   };
 
   return (
@@ -106,23 +185,23 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
       <div className="flex flex-wrap items-center gap-2">
         <Badge
           variant={
-            product.availability === "IN_STOCK"
+            displayAvailability === "IN_STOCK"
               ? "default"
-              : product.availability === "LOW_STOCK"
+              : displayAvailability === "LOW_STOCK"
                 ? "secondary"
-                : "outline"
+                : displayAvailability === "OUT_OF_STOCK"
+                  ? "destructive"
+                  : "outline"
           }
           className="text-xs font-semibold px-2.5 py-0.5"
         >
-          {product.availability === "IN_STOCK"
-            ? "In Stock"
-            : product.availability === "LOW_STOCK"
-              ? "Low Stock"
-              : "Pre-Order"}
+          {AVAILABILITY_LABEL[displayAvailability]}
         </Badge>
-        {product.productCode && (
+        {(selectedVariant?.sku || product.productCode) && (
           <span className="text-xs bg-muted text-muted-foreground px-2.5 py-0.5 rounded-md font-mono">
-            Code: {product.productCode}
+            {selectedVariant?.sku
+              ? `SKU: ${selectedVariant.sku}`
+              : `Code: ${product.productCode}`}
           </span>
         )}
         {product.warrantyText && (
@@ -161,15 +240,35 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
         </div>
       )}
 
+      {/* Variant Selection (VARIABLE products only) */}
+      {isVariable && (
+        <div className="space-y-2">
+          <ProductVariantSelector
+            optionGroups={optionGroups}
+            variants={variants}
+            selection={selection}
+            onChange={setSelection}
+          />
+          {needsVariant && (
+            <p className="text-xs text-destructive">
+              Please select {optionGroups.length > 1 ? "all options" : "an option"}{" "}
+              to continue.
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Pricing Section */}
       <div className="flex items-baseline flex-wrap gap-3 p-3.5 rounded-lg bg-card border border-border/60">
         <span className="text-2xl sm:text-3xl font-extrabold text-secondary-foreground dark:text-primary-foreground">
-          {product.price.toLocaleString()}৳
+          {needsVariant && product.maxPrice && product.maxPrice > product.price
+            ? `${product.price.toLocaleString()}৳ – ${product.maxPrice.toLocaleString()}৳`
+            : `${displayPrice.toLocaleString()}৳`}
         </span>
 
-        {product.regularPrice && product.regularPrice > product.price && (
+        {displayRegularPrice && displayRegularPrice > displayPrice && (
           <span className="text-base text-muted-foreground line-through font-normal">
-            {product.regularPrice.toLocaleString()}৳
+            {displayRegularPrice.toLocaleString()}৳
           </span>
         )}
 
@@ -218,14 +317,16 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
           <Button
             onClick={handleAddToCart}
             variant="outline"
+            disabled={!canPurchase}
             className="flex-1 h-11 cursor-pointer font-semibold gap-2"
           >
             <HugeiconsIcon icon={ShoppingCart02Icon} className="w-4 h-4" />
-            Add to Cart
+            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
           </Button>
 
           <Button
             onClick={handleBuyNow}
+            disabled={!canPurchase}
             className="flex-1 h-11 cursor-pointer font-semibold gap-2"
           >
             <HugeiconsIcon icon={ZapIcon} className="w-4 h-4" />

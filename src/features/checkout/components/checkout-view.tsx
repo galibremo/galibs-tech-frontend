@@ -155,7 +155,10 @@ export default function CheckoutView() {
         paymentMethod: values.paymentMethod as "COD" | "BKASH",
         notes: values.comment?.trim() || undefined,
         items: items.map((item) => ({
-          productId: item.id,
+          productId: item.productId ?? item.id,
+          // The backend rejects a variantId on SIMPLE products, so omit it
+          // rather than sending null.
+          ...(item.variantId ? { variantId: item.variantId } : {}),
           quantity: item.quantity,
         })),
       });
@@ -653,6 +656,12 @@ export default function CheckoutView() {
                             {item.quantity} X
                           </span>
                           {item.name}
+                          {item.variantTitle && (
+                            <span className="text-muted-foreground">
+                              {" "}
+                              ({item.variantTitle})
+                            </span>
+                          )}
                         </div>
                       </div>
 

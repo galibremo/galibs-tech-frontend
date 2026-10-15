@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ShoppingCart02Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ export default function CatalogProductGrid({
   onResetFilters,
 }: CatalogProductGridProps) {
   const { addToCart } = useCart();
+  const router = useRouter();
 
   if (isLoading) {
     return (
@@ -119,11 +121,18 @@ export default function CatalogProductGrid({
           ? product.regularPrice! - product.price
           : null;
 
+        const isVariable = product.type === "VARIABLE";
+
         const handleAddToCart = (e: React.MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
+          // Variable products need a variant chosen first, so send the shopper to the PDP.
+          if (isVariable) {
+            router.push(route.public.productDetails(product.slug));
+            return;
+          }
           addToCart({
-            id: product.id,
+            productId: product.id,
             name: product.name,
             slug: product.slug,
             price: product.price,
@@ -211,7 +220,7 @@ export default function CatalogProductGrid({
                   onClick={handleAddToCart}
                   disabled={product.availability === "OUT_OF_STOCK"}
                   className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary! hover:text-primary-foreground! transition-colors"
-                  title="Add to Cart"
+                  title={isVariable ? "Select options" : "Add to Cart"}
                 >
                   <HugeiconsIcon
                     icon={ShoppingCart02Icon}

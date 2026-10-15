@@ -128,6 +128,11 @@ export function CartSheet() {
                         ) : (
                           item.name
                         )}
+                        {item.variantTitle && (
+                          <span className="block text-xs font-normal text-muted-foreground">
+                            {item.variantTitle}
+                          </span>
+                        )}
                       </h4>
                       <Button
                         variant="ghost"

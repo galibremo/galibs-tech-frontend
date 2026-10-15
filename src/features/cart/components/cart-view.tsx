@@ -175,6 +175,11 @@ export default function CartView() {
                               item.name
                             )}
                           </h3>
+                          {item.variantTitle && (
+                            <p className="text-xs text-muted-foreground">
+                              {item.variantTitle}
+                            </p>
+                          )}
 
                           {/* Reward points badge / details if present */}
                           <div className="flex flex-wrap items-center gap-2 pt-0.5">

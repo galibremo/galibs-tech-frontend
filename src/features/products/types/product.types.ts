@@ -36,6 +36,36 @@ export interface SpecGroup {
   items?: SpecField[];
 }
 
+export interface ProductOptionValue {
+  id: string;
+  label: string;
+  slug: string;
+  swatchValue: string | null;
+  sortOrder: number;
+}
+
+export interface ProductOptionGroup {
+  id: string;
+  name: string;
+  code: string;
+  sortOrder: number;
+  values: ProductOptionValue[];
+}
+
+export interface ProductVariant {
+  id: string;
+  sku: string;
+  title: string;
+  price: number;
+  regularPrice: number | null;
+  stockQty: number;
+  availability: "IN_STOCK" | "OUT_OF_STOCK" | "LOW_STOCK" | "PRE_ORDER" | "UPCOMING";
+  isDefault: boolean;
+  thumbnailUrl: string | null;
+  /** IDs of the option values (one per option group) this variant is made of. */
+  optionValueIds: string[];
+}
+
 export interface ProductDetails {
   id: string;
   type: "SIMPLE" | "VARIABLE";
@@ -64,6 +94,10 @@ export interface ProductDetails {
   primaryCategory?: CategorySummary;
   images?: ProductImage[];
   specifications?: SpecGroup[];
+  /** Only present when `type === "VARIABLE"`. */
+  optionGroups?: ProductOptionGroup[];
+  /** Only present when `type === "VARIABLE"`. */
+  variants?: ProductVariant[];
 }
 
 export interface ProductListQueryParams {

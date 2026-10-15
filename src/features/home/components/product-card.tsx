@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type { FeaturedProduct, ProductItem } from "../types/home.types";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
@@ -15,12 +16,19 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const router = useRouter();
+  const isVariable = product.type === "VARIABLE";
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    // Variable products need a variant chosen first, so send the shopper to the PDP.
+    if (isVariable) {
+      router.push(route.public.productDetails(product.slug));
+      return;
+    }
     addToCart({
-      id: product.id,
+      productId: product.id,
       name: product.name,
       slug: product.slug,
       price: product.price,
@@ -102,8 +110,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             size="icon"
             variant="outline"
             onClick={handleAddToCart}
+            disabled={product.availability === "OUT_OF_STOCK"}
             className="h-8 w-8 cursor-pointer shrink-0 hover:bg-primary! hover:text-primary-foreground! transition-colors"
-            title="Add to Cart"
+            title={isVariable ? "Select options" : "Add to Cart"}
           >
             <HugeiconsIcon icon={ShoppingCart02Icon} className="w-4 h-4" />
           </Button>

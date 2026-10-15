@@ -3,7 +3,16 @@
 import { createContext, useContext } from "react";
 
 export interface CartItem {
+  /**
+   * Cart line key. Equals `productId` for simple products and
+   * `${productId}:${variantId}` for a variant, so two variants of the same
+   * product are separate lines.
+   */
   id: string;
+  productId: string;
+  variantId?: string | null;
+  /** Human-readable variant label, e.g. "Black / 256GB". */
+  variantTitle?: string | null;
   name: string;
   slug?: string;
   price: number;
@@ -14,7 +23,11 @@ export interface CartItem {
 
 export interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  /** The line `id` is derived from `productId` + `variantId` by the provider. */
+  addToCart: (
+    item: Omit<CartItem, "quantity" | "id">,
+    quantity?: number,
+  ) => void;
   removeFromCart: (id: string) => void;
   addQuantity: (id: string) => void;
   removeQuantity: (id: string) => void;
