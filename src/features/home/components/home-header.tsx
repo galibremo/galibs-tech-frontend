@@ -59,7 +59,7 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
+          <div className=" mb-0! text-sm font-medium leading-none">{title}</div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
@@ -239,7 +239,7 @@ export default function HomeHeader() {
                 <Button
                   asChild
                   variant="ghost"
-                  className="text-black dark:text-white cursor-pointer gap-1.5 tracking-wide px-0 hidden lg:flex"
+                  className="text-black dark:text-white cursor-pointer gap-1.5 tracking-wide hidden lg:flex"
                 >
                   <Link
                     href={`${route.protected.login}?redirect=${encodeURIComponent(route.public.home)}`}
