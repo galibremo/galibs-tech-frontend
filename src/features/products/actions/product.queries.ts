@@ -8,10 +8,14 @@ import {
 import { productKeys } from "./product.keys";
 import type { ProductListQueryParams } from "../types/product.types";
 
-export function useAllProductsQuery(query: ProductListQueryParams) {
+export function useAllProductsQuery(
+  query: ProductListQueryParams,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: productKeys.list(query),
     queryFn: () => getAllProducts(query),
+    ...options,
   });
 }
 

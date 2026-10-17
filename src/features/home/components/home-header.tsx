@@ -304,9 +304,13 @@ export default function HomeHeader() {
           </div>
         </Container>
       </div>
-      <div className="absolute shadow-md z-10 bg-background w-full">
+      <div className="absolute top-full left-0 right-0 shadow-lg z-50 bg-background">
         {showMobileSearch && (
-          <GlobalSearch className="flex lg:hidden" autoFocus />
+          <GlobalSearch
+            className="flex lg:hidden"
+            autoFocus
+            onClose={() => setShowMobileSearch(false)}
+          />
         )}
       </div>
     </header>

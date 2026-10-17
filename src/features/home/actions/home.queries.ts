@@ -10,10 +10,14 @@ export function useCategoriesTreeQuery() {
   });
 }
 
-export function useCategoriesListQuery(params?: { page?: number; limit?: number }) {
+export function useCategoriesListQuery(
+  params?: { page?: number; limit?: number; search?: string },
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: categoriesListKeys.list(params),
     queryFn: () => categoriesList(params),
+    ...options,
   });
 }
 

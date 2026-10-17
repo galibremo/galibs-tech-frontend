@@ -16,7 +16,11 @@ export async function categoriesTree(): Promise<CategoryTreeItem[]> {
   });
 }
 
-export async function categoriesList(params?: { page?: number; limit?: number }): Promise<CategoriesListResponse> {
+export async function categoriesList(params?: {
+  page?: number;
+  limit?: number;
+  search?: string;
+}): Promise<CategoriesListResponse> {
   return fetchClient<CategoriesListResponse>({
     method: "GET",
     url: apiRoute.categories,
