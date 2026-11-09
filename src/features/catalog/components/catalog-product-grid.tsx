@@ -15,6 +15,9 @@ interface CatalogProductGridProps {
   products: CatalogProductCard[];
   isLoading?: boolean;
   onResetFilters?: () => void;
+  emptyTitle?: string;
+  emptyDescription?: React.ReactNode;
+  resetButtonText?: string;
 }
 
 const STOCK_STATUS_CONFIG: Record<
@@ -52,6 +55,9 @@ export default function CatalogProductGrid({
   products,
   isLoading = false,
   onResetFilters,
+  emptyTitle = "No products found",
+  emptyDescription = "We couldn't find any products matching your selected filter criteria. Try clearing some filters.",
+  resetButtonText = "Reset Filters",
 }: CatalogProductGridProps) {
   const { addToCart } = useCart();
   const router = useRouter();
@@ -87,20 +93,19 @@ export default function CatalogProductGrid({
           <HugeiconsIcon icon={Search01Icon} size={28} />
         </div>
         <h3 className="text-lg font-bold text-foreground mb-1">
-          No products found
+          {emptyTitle}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mb-4">
-          We couldn&apos;t find any products matching your selected filter
-          criteria. Try clearing some filters.
-        </p>
+        <div className="text-xs sm:text-sm text-muted-foreground max-w-sm mb-4">
+          {emptyDescription}
+        </div>
         {onResetFilters && (
           <Button
             onClick={onResetFilters}
             variant="default"
             size="sm"
-            className="font-semibold text-xs"
+            className="font-semibold text-xs cursor-pointer"
           >
-            Reset Filters
+            {resetButtonText}
           </Button>
         )}
       </div>

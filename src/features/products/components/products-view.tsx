@@ -57,6 +57,47 @@ export default function ProductsView() {
   const currentPage = productsData?.page || 1;
   const currentLimit = productsData?.limit || 20;
 
+  const hasSearch = Boolean(search);
+  const hasBrand = Boolean(brandSlug);
+  const hasFeatured = Boolean(featured);
+
+  let emptyTitle = "No products found";
+  let emptyDescription: React.ReactNode =
+    "There are currently no products available.";
+  let resetButtonText: string | undefined = undefined;
+  let handleReset: (() => void) | undefined = undefined;
+
+  if (hasSearch) {
+    emptyTitle = `No products found for "${search}"`;
+    emptyDescription = brandLabel
+      ? `We couldn't find any ${brandLabel} products matching "${search}". Try checking your spelling or searching for a different keyword.`
+      : `We couldn't find any products matching "${search}". Try checking your spelling or using more generic keywords.`;
+    resetButtonText = hasBrand ? "Clear Search" : "View All Products";
+    handleReset = () => {
+      startTransition(() => {
+        if (hasBrand) {
+          router.push(`${pathname}?brand=${encodeURIComponent(brandSlug!)}`);
+        } else {
+          router.push(pathname);
+        }
+      });
+    };
+  } else if (hasBrand) {
+    emptyTitle = `No products found for ${brandLabel}`;
+    emptyDescription = `There are currently no products available under ${brandLabel}.`;
+    resetButtonText = "View All Products";
+    handleReset = () => {
+      startTransition(() => router.push(pathname));
+    };
+  } else if (hasFeatured) {
+    emptyTitle = "No featured products";
+    emptyDescription = "There are currently no featured products available.";
+    resetButtonText = "View All Products";
+    handleReset = () => {
+      startTransition(() => router.push(pathname));
+    };
+  }
+
   const handleFilterChange = (newParams: { page?: number; limit?: number }) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -134,9 +175,10 @@ export default function ProductsView() {
         <CatalogProductGrid
           products={products as any}
           isLoading={isLoading || isPending}
-          onResetFilters={() => {
-            startTransition(() => router.push(pathname));
-          }}
+          emptyTitle={emptyTitle}
+          emptyDescription={emptyDescription}
+          resetButtonText={resetButtonText}
+          onResetFilters={handleReset}
         />
 
         {/* Pagination */}

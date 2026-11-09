@@ -187,6 +187,13 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
     categoryDetail?.name ||
     slug.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
+  const hasActiveFilters = Boolean(
+    queryParams.priceMin !== undefined ||
+      queryParams.priceMax !== undefined ||
+      (queryParams.availability && queryParams.availability.length > 0) ||
+      (queryParams.filter && queryParams.filter.length > 0),
+  );
+
   return (
     <div className="bg-background min-h-screen pb-16">
       <Container className="space-y-6 p-3 sm:p-4.5 lg:p-6 xl:py-8">
@@ -236,7 +243,15 @@ export default function CatalogDetails({ slug }: CatalogDetailsProps) {
             <CatalogProductGrid
               products={products}
               isLoading={isProductsLoading || isPending}
-              onResetFilters={handleResetFilters}
+              emptyTitle={
+                hasActiveFilters ? "No products found" : "No products in this category"
+              }
+              emptyDescription={
+                hasActiveFilters
+                  ? "We couldn't find any products matching your selected filter criteria. Try clearing some filters."
+                  : "There are currently no products available in this category."
+              }
+              onResetFilters={hasActiveFilters ? handleResetFilters : undefined}
             />
 
             {/* Pagination */}
