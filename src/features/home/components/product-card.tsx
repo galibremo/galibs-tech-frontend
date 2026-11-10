@@ -5,10 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { FeaturedProduct, ProductItem } from "../types/home.types";
 import { useCart } from "@/context/cart-context";
+import { useWishlist } from "@/context/wishlist-context";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ShoppingCart02Icon } from "@hugeicons/core-free-icons";
+import { ShoppingCart02Icon, Heart } from "@hugeicons/core-free-icons";
 import { route } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: FeaturedProduct | ProductItem;
@@ -16,8 +18,24 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const router = useRouter();
   const isVariable = product.type === "VARIABLE";
+  const isWishlisted = isInWishlist(product.id);
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist({
+      productId: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      regularPrice: product.regularPrice,
+      thumbnailUrl: product.thumbnailUrl,
+      availability: product.availability,
+    });
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -70,6 +88,27 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
       )}
+
+      {/* Wishlist Button */}
+      <button
+        type="button"
+        onClick={handleToggleWishlist}
+        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        className={cn(
+          "absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-xs",
+          isWishlisted
+            ? "bg-white dark:bg-zinc-800 text-rose-500 opacity-100"
+            : "bg-white/80 dark:bg-zinc-800/80 hover:bg-white dark:hover:bg-zinc-800 text-muted-foreground hover:text-rose-500 backdrop-blur-xs opacity-0 group-hover:opacity-100 focus:opacity-100",
+        )}
+      >
+        <HugeiconsIcon
+          icon={Heart}
+          className={cn(
+            "w-4 h-4 transition-transform active:scale-75",
+            isWishlisted && "fill-rose-500 text-rose-500",
+          )}
+        />
+      </button>
 
       {/* Image Thumbnail Container */}
       <div className="relative w-full aspect-4/3 flex items-center justify-center overflow-hidden">

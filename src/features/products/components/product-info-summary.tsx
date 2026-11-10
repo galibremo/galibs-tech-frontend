@@ -13,13 +13,16 @@ import {
   ShieldCheck,
   ZapIcon,
   ArrowDown01Icon,
+  Heart,
 } from "@hugeicons/core-free-icons";
 
 import { useCart } from "@/context/cart-context";
+import { useWishlist } from "@/context/wishlist-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { route } from "@/routes/routes";
+import { cn } from "@/lib/utils";
 import type { ProductDetails } from "../types/product.types";
 import {
   ProductVariantSelector,
@@ -44,6 +47,7 @@ const AVAILABILITY_LABEL: Record<ProductDetails["availability"], string> = {
 export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(1);
 
   // --- Variants -----------------------------------------------------------
@@ -94,6 +98,38 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
   const needsVariant = isVariable && !selectedVariant;
   const isOutOfStock = purchasable?.availability === "OUT_OF_STOCK";
   const canPurchase = !needsVariant && !isOutOfStock;
+
+  const defaultVariant = useMemo(
+    () => (isVariable ? pickInitialVariant(variants) : null),
+    [isVariable, variants],
+  );
+  const activeVariant = selectedVariant ?? defaultVariant;
+  const currentVariantId = activeVariant?.id ?? null;
+  const isWishlisted = isInWishlist(product.id, currentVariantId);
+
+  const handleToggleWishlist = () => {
+    toggleWishlist({
+      productId: product.id,
+      variantId: currentVariantId,
+      name: activeVariant
+        ? `${product.name} (${activeVariant.title})`
+        : product.name,
+      slug: product.slug,
+      price: purchasable?.price ?? activeVariant?.price ?? product.price,
+      regularPrice:
+        purchasable?.regularPrice ??
+        activeVariant?.regularPrice ??
+        product.regularPrice,
+      thumbnailUrl:
+        purchasable?.thumbnailUrl ??
+        activeVariant?.thumbnailUrl ??
+        product.thumbnailUrl,
+      availability:
+        purchasable?.availability ??
+        activeVariant?.availability ??
+        product.availability,
+    });
+  };
 
   const scrollToSpecs = () => {
     const element = document.getElementById("specification");
@@ -331,6 +367,28 @@ export function ProductInfoSummary({ product }: ProductInfoSummaryProps) {
           >
             <HugeiconsIcon icon={ZapIcon} className="w-4 h-4" />
             Buy Now
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={handleToggleWishlist}
+            className={cn(
+              "h-11 w-11 cursor-pointer shrink-0 transition-colors",
+              isWishlisted &&
+                "text-rose-500 border-rose-200 bg-rose-50/50 dark:bg-rose-950/20 hover:bg-rose-100 dark:hover:bg-rose-950/40",
+            )}
+            title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+            aria-label={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+          >
+            <HugeiconsIcon
+              icon={Heart}
+              className={cn(
+                "w-5 h-5 transition-transform active:scale-75",
+                isWishlisted && "fill-rose-500 text-rose-500",
+              )}
+            />
           </Button>
         </div>
       </div>

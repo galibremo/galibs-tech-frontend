@@ -27,6 +27,7 @@ export interface CartContextType {
   addToCart: (
     item: Omit<CartItem, "quantity" | "id">,
     quantity?: number,
+    options?: { skipBackend?: boolean; silent?: boolean },
   ) => void;
   removeFromCart: (id: string) => void;
   addQuantity: (id: string) => void;

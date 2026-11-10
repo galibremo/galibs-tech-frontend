@@ -43,6 +43,7 @@ import { route } from "@/routes/routes";
 import { HeaderUserNav } from "@/features/home/components/header-user-nav";
 import { useAuth } from "@/hooks/use-auth";
 import { CartSheet } from "@/components/common/cart/cart-sheet";
+import { WishlistSheet } from "@/components/common/wishlist/wishlist-sheet";
 
 const ListItem = React.forwardRef<
   HTMLAnchorElement,
@@ -221,17 +222,7 @@ export default function HomeHeader() {
                   strokeWidth={2}
                 />
               </Button>
-              <Button
-                variant="ghost"
-                className="cursor-pointer hidden lg:flex"
-                size="icon"
-              >
-                <HugeiconsIcon
-                  icon={Heart}
-                  className="mt-0.5"
-                  strokeWidth={2}
-                />
-              </Button>
+              <WishlistSheet />
               <CartSheet />
               {user ? (
                 <HeaderUserNav />

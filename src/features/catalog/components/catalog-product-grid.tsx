@@ -5,9 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ShoppingCart02Icon, Search01Icon } from "@hugeicons/core-free-icons";
+import { ShoppingCart02Icon, Search01Icon, Heart } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/cart-context";
+import { useWishlist } from "@/context/wishlist-context";
+import { cn } from "@/lib/utils";
 import { route } from "@/routes/routes";
 import type { CatalogProductCard, StockStatus } from "../types/catalog.types";
 
@@ -60,6 +62,7 @@ export default function CatalogProductGrid({
   resetButtonText = "Reset Filters",
 }: CatalogProductGridProps) {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const router = useRouter();
 
   if (isLoading) {
@@ -127,6 +130,21 @@ export default function CatalogProductGrid({
           : null;
 
         const isVariable = product.type === "VARIABLE";
+        const isWishlisted = isInWishlist(product.id);
+
+        const handleToggleWishlist = (e: React.MouseEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleWishlist({
+            productId: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            regularPrice: product.regularPrice,
+            thumbnailUrl: product.thumbnailUrl,
+            availability: product.availability,
+          });
+        };
 
         const handleAddToCart = (e: React.MouseEvent) => {
           e.preventDefault();
@@ -159,11 +177,32 @@ export default function CatalogProductGrid({
               >
                 {stockConfig.label}
               </span>
-              {saveAmount && (
-                <span className="bg-[#6F11B6] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs">
-                  Save: {saveAmount.toLocaleString()}৳
-                </span>
-              )}
+              <div className="flex items-center gap-1.5 pointer-events-auto">
+                {saveAmount && (
+                  <span className="bg-[#6F11B6] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs">
+                    Save: {saveAmount.toLocaleString()}৳
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={handleToggleWishlist}
+                  aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                  className={cn(
+                    "w-7 h-7 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-xs",
+                    isWishlisted
+                      ? "bg-white dark:bg-zinc-800 text-rose-500 opacity-100"
+                      : "bg-white/80 dark:bg-zinc-800/80 hover:bg-white dark:hover:bg-zinc-800 text-muted-foreground hover:text-rose-500 backdrop-blur-xs opacity-0 group-hover:opacity-100 focus:opacity-100",
+                  )}
+                >
+                  <HugeiconsIcon
+                    icon={Heart}
+                    className={cn(
+                      "w-4 h-4 transition-transform active:scale-75",
+                      isWishlisted && "fill-rose-500 text-rose-500",
+                    )}
+                  />
+                </button>
+              </div>
             </div>
 
             {/* Thumbnail */}

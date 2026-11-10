@@ -11,6 +11,7 @@ import { getSessionUser } from "@/lib/services";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { RedirectProvider } from "@/providers/redirect-provider";
 import CartProvider from "@/providers/cart-provider";
+import WishlistProvider from "@/providers/wishlist-provider";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -60,9 +61,11 @@ export default async function RootLayout({
             >
               <QueryProvider>
                 <CartProvider>
-                  <RedirectProvider>
-                    <TooltipProvider>{children}</TooltipProvider>
-                  </RedirectProvider>
+                  <WishlistProvider>
+                    <RedirectProvider>
+                      <TooltipProvider>{children}</TooltipProvider>
+                    </RedirectProvider>
+                  </WishlistProvider>
                 </CartProvider>
                 <Toaster richColors position="bottom-right" />
               </QueryProvider>

@@ -82,7 +82,11 @@ export default function CartProvider({
   }, [items]);
 
   const addToCart = useCallback(
-    (product: Omit<CartItem, "quantity" | "id">, quantityToAdd: number = 1) => {
+    (
+      product: Omit<CartItem, "quantity" | "id">,
+      quantityToAdd: number = 1,
+      options?: { skipBackend?: boolean; silent?: boolean },
+    ) => {
       const lineId = cartLineId(product.productId, product.variantId);
 
       setItems((prevItems) => {
@@ -102,17 +106,23 @@ export default function CartProvider({
         }
       });
 
-      // Background sync to backend cart
-      addBackendCartItem({
-        productId: product.productId,
-        variantId: product.variantId ?? null,
-        quantity: quantityToAdd,
-      }).catch((err) => console.error("Error adding item to backend cart:", err));
+      // Background sync to backend cart unless explicitly skipped
+      if (!options?.skipBackend) {
+        addBackendCartItem({
+          productId: product.productId,
+          variantId: product.variantId ?? null,
+          quantity: quantityToAdd,
+        }).catch((err) =>
+          console.error("Error adding item to backend cart:", err),
+        );
+      }
 
-      const label = product.variantTitle
-        ? `${product.name} (${product.variantTitle})`
-        : product.name;
-      toast.success(`${label} added to cart`);
+      if (!options?.silent) {
+        const label = product.variantTitle
+          ? `${product.name} (${product.variantTitle})`
+          : product.name;
+        toast.success(`${label} added to cart`);
+      }
     },
     [],
   );
