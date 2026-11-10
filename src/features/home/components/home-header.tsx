@@ -267,7 +267,9 @@ export default function HomeHeader() {
                     {category.children && category.children.length > 0 ? (
                       <>
                         <NavigationMenuTrigger className="h-7">
-                          {category.name}
+                          <Link href={`/${category.slug}`}>
+                            {category.name}
+                          </Link>
                         </NavigationMenuTrigger>
                         <NavigationMenuContent
                           className={cn(
